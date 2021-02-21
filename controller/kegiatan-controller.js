@@ -1,32 +1,32 @@
 import express from 'express';
-import * as Units from '../models/units-model.js';
+import * as Kegiatan from '../models/kegiatan-model.js';
 
 const router = express.Router();
 
-export const getUnits = async (req, res) => {
+export const getKegiatans = async (req, res) => {
     try {
-        const units = await Units.getUnits();
-        return res.status(200).send(units);
+        const kegiatans = await Kegiatan.getKegiatans();
+        return res.status(200).send(kegiatans);
     } catch (err) {
         return res.status(500).send(err);
     }
 };
 
-export const getSubUnits = async (req, res) => {
+export const getSubKegiatans = async (req, res) => {
     try {
-        const subunits = await Units.getSubUnits();
-        return res.status(200).send(subunits);
+        const subkegiatans = await Kegiatan.getSubKegiatans();
+        return res.status(200).send(subkegiatans);
     } catch (err) {
         return res.status(500).send(err);
     }
 };
 
-export const getUnit = async (req, res) => {
+export const getKegiatan = async (req, res) => {
     try {
-        const unit = await Units.getUnit(req.params.id);
-        return res.status(200).send(unit);
+        const kegiatan = await Kegiatan.getKegiatan(req.params.id);
+        return res.status(200).send(kegiatan);
     } catch (err) {
-        if (err.name === "unitNotFound")
+        if (err.name === "kegiatanNotFound")
             return res.status(404).send({
                 message: err.message
             });
@@ -34,33 +34,33 @@ export const getUnit = async (req, res) => {
     }
 };
 
-export const createUnit = async (req, res) => {
+export const createKegiatan = async (req, res) => {
     try {
-        const {name, code, subunit} = req.body;
-        if (!name || !code || !subunit) {
+        const {name, subkegiatan} = req.body;
+        if (!name || !code || !subkegiatan) {
             res.status(400).send({
                 message: "required field cannot be empty"
             })
         }
-        const newUser = await Units.createUnit(req.body);
+        const newUser = await Kegiatan.createKegiatan(req.body);
         return res.status(201).send(newUser);
     } catch (err) {
         return res.status(500).send(err);
     }
 };
 
-export const updateUnit = async (req, res) => {
+export const updateKegiatan = async (req, res) => {
     try {
-        const {name, code, subunit} = req.body;
-        if (!name || !code || !subunit) {
+        const {name, subkegiatan} = req.body;
+        if (!name || !subkegiatan) {
             res.status(400).send({
                 message: "required field cannot be empty"
             })
         }
-        const newUser = await Units.updateUnit(req.params.id, req.body);
+        const newUser = await Kegiatan.updateKegiatan(req.params.id, req.body);
         return res.status(200).send(newUser);
     } catch (err) {
-        if (err.name === "unitNotFound")
+        if (err.name === "kegiatanNotFound")
             return res.status(404).send({
                 message: err.message
             });
@@ -68,12 +68,12 @@ export const updateUnit = async (req, res) => {
     }
 }
 
-export const deleteUnit = async (req, res) => {
+export const deleteKegiatan = async (req, res) => {
     try {
-        const deletedUnit = await Units.deleteUnit(req.params.id);
-        return res.status(200).send(deletedUnit);
+        const deletedKegiatan = await Kegiatan.deleteKegiatan(req.params.id);
+        return res.status(200).send(deletedKegiatan);
     } catch (err) {
-        if (err.name === "unitNotFound")
+        if (err.name === "kegiatanNotFound")
             return res.status(404).send({
                 message: err.message
             });
