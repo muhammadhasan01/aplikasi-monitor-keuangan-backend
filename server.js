@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import unitsRouter  from './routes/units.js';
+import unitsRouter from './routes/units-router.js';
 
 dotenv.config();
 
@@ -16,7 +16,7 @@ const CONNECTION_URL = process.env.ATLAS_URI;
 app.use('/units', unitsRouter);
 
 try {
-    mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })    
+    mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true, useFindAndModify: false })
     const connection = mongoose.connection;
     connection.once('open', () => {
         console.log("MongoDB database connection established successfully");
