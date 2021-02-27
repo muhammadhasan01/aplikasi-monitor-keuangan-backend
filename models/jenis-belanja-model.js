@@ -1,17 +1,13 @@
 import mongoose from 'mongoose';
 
-const rincianBelanjaSchema = mongoose.Schema({
-    jenis: {
+const jenisBelanjaSchema = mongoose.Schema({
+    nama: {
         type: String,
         required: true,
         unique: true,
-    },
-    rincian: {
-        type: String,
-        required: true
     }
 });
 
-const rincianBelanja = mongoose.model('belanja', rincianBelanjaSchema);
+const rincianBelanja = mongoose.model('belanja', jenisBelanjaSchema);
 
 export default rincianBelanja;
