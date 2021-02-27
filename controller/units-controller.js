@@ -1,0 +1,84 @@
+import express from 'express';
+import * as Units from '../models/units-model.js';
+
+const router = express.Router();
+
+export const getUnits = async (req, res) => {
+    try {
+        const units = await Units.getUnits();
+        return res.status(200).send(units);
+    } catch (err) {
+        return res.status(500).send(err);
+    }
+};
+
+export const getSubUnits = async (req, res) => {
+    try {
+        const subunits = await Units.getSubUnits();
+        return res.status(200).send(subunits);
+    } catch (err) {
+        return res.status(500).send(err);
+    }
+};
+
+export const getUnit = async (req, res) => {
+    try {
+        const unit = await Units.getUnit(req.params.id);
+        return res.status(200).send(unit);
+    } catch (err) {
+        if (err.name === "unitNotFound")
+            return res.status(404).send({
+                message: err.message
+            });
+        return res.status(500).send(err);
+    }
+};
+
+export const createUnit = async (req, res) => {
+    try {
+        const {name, code, subunit} = req.body;
+        if (!name || !code || !subunit) {
+            res.status(400).send({
+                message: "required field cannot be empty"
+            })
+        }
+        const newUser = await Units.createUnit(req.body);
+        return res.status(201).send(newUser);
+    } catch (err) {
+        return res.status(500).send(err);
+    }
+};
+
+export const updateUnit = async (req, res) => {
+    try {
+        const {name, code, subunit} = req.body;
+        if (!name || !code || !subunit) {
+            res.status(400).send({
+                message: "required field cannot be empty"
+            })
+        }
+        const newUser = await Units.updateUnit(req.params.id, req.body);
+        return res.status(200).send(newUser);
+    } catch (err) {
+        if (err.name === "unitNotFound")
+            return res.status(404).send({
+                message: err.message
+            });
+        return res.status(500).send(err);
+    }
+}
+
+export const deleteUnit = async (req, res) => {
+    try {
+        const deletedUnit = await Units.deleteUnit(req.params.id);
+        return res.status(200).send(deletedUnit);
+    } catch (err) {
+        if (err.name === "unitNotFound")
+            return res.status(404).send({
+                message: err.message
+            });
+        return res.status(500).send(err);
+    }
+}
+
+export default router
