@@ -3,6 +3,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import unitsRouter from './routes/units-router.js';
+import accountsRouter from './routes/account-router.js';
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 5000;
 const CONNECTION_URL = process.env.ATLAS_URI;
 
 app.use('/units', unitsRouter);
+app.use('/accounts', accountsRouter);
 
 try {
     mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true, useFindAndModify: false })
