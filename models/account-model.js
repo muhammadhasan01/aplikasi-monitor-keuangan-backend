@@ -70,6 +70,18 @@ export const getAccount = async (id) => {
     }
 }
 
+export const getUsername = async(uname) =>{
+    try {
+        const account = await AccountModel.find({username: uname});
+        if (!account) {
+            throw {name: "accountNotFound", message: `Account with username ${uname} was not found`};
+        }
+        return account;
+    } catch (err) {
+        throw err;
+    }
+}
+
 export const createAccount = async ({ ID_unit, name, username, email, userType, password }) => {
     const newAccount = new AccountModel({ ID_unit, name, username, email, userType, password });
     try {
