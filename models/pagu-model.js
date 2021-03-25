@@ -39,11 +39,11 @@ export const getAllPagu = async () => {
     }
 }
 
-export const getPagu = async({unit, ADO, year}) => {
+export const getPagu = async(unit, ado, year) => {
     try{
-        const queryPagu = await PaguModel.findOne({unit: unit, ADO: ADO, year: year});
+        const queryPagu = await PaguModel.findOne({unit: unit, ADO: ado, year: new Date(year)});
         if (!queryPagu) {
-            throw {name: "paguNotFound", message: `Pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak ditemukan`};
+            throw {name: "paguNotFound", message: `Pagu anggaran ${unit} untuk ${ado} tahun ${year} tidak ditemukan`};
         }
         return queryPagu;
     } catch (err) {
@@ -51,8 +51,8 @@ export const getPagu = async({unit, ADO, year}) => {
     }
 }
 
-export const insertNewPagu = async({unit, ADO, year, alokasi}) => {
-    const newPagu = new PaguModel({unit, ADO, year, alokasi, 0})
+export const insertNewPagu = async(unit, ADO, year, alokasi, penggunaan) => {
+    const newPagu = new PaguModel({unit, ADO, year, alokasi, penggunaan})
     try{
         paguCreated = await newPagu.save();
         return paguCreated;
@@ -61,9 +61,9 @@ export const insertNewPagu = async({unit, ADO, year, alokasi}) => {
     }
 }
 
-export const updatePagu = async({unit, ADO, year, value}) =>{
+export const updatePagu = async(unit, ADO, year, value) =>{
     try{
-        const updatedPagu = await PaguModel.findOneAndUpdate({unit: unit, ADO: ADO, year: year}, {alokasi: amount}, {new: true});
+        const updatedPagu = await PaguModel.findOneAndUpdate({unit: unit, ADO: ADO, year: new Date(year)}, {alokasi: value}, {new: true});
         if (!updatedPagu) {
             throw {name: "paguNotFound", message: `Update pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak berhasil`};
         }
@@ -73,10 +73,9 @@ export const updatePagu = async({unit, ADO, year, value}) =>{
     }
 } 
 
-
-export const updatePenggunaanPagu = async({unit, ADO, year, amount}) =>{
+export const updatePenggunaanPagu = async(unit, ADO, year, amount) =>{
     try{
-        const updatedPagu = await PaguModel.findOneAndUpdate({unit: unit, ADO: ADO, year: year}, {$inc: {penggunaan: amount}}, {new: true});
+        const updatedPagu = await PaguModel.findOneAndUpdate({unit: unit, ADO: ADO, year: new Date(year)}, {$inc: {penggunaan: amount}}, {new: true});
         if (!updatedPagu) {
             throw {name: "paguNotFound", message: `Update pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak berhasil`};
         }
@@ -86,9 +85,9 @@ export const updatePenggunaanPagu = async({unit, ADO, year, amount}) =>{
     }
 } 
 
-export const getAlokasiPagu = async({unit, ADO, year}) => {
+export const getAlokasiPagu = async(unit, ADO, year) => {
     try{
-        const queryPagu = await PaguModel.findOne({unit: unit, ADO: ADO, year: year});
+        const queryPagu = await PaguModel.findOne({unit: unit, ADO: ADO, year: new Date(year)});
         if (!queryPagu) {
             throw {name: "paguNotFound", message: `Pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak ditemukan`};
         }
@@ -98,9 +97,9 @@ export const getAlokasiPagu = async({unit, ADO, year}) => {
     }
 }
 
-export const getPenggunaanPagu = async({unit, ADO, year}) => {
+export const getPenggunaanPagu = async(unit, ADO, year) => {
     try{
-        const queryPagu = await PaguModel.find({unit: unit, ADO: ADO, year: year});
+        const queryPagu = await PaguModel.findOne({unit: unit, ADO: ADO, year: new Date(year)});
         if (!queryPagu) {
             throw {name: "paguNotFound", message: `Pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak ditemukan`};
         }
@@ -110,9 +109,9 @@ export const getPenggunaanPagu = async({unit, ADO, year}) => {
     }
 }
 
-export const getSisaPagu = async({unit, ADO, year}) => {
+export const getSisaPagu = async(unit, ADO, year) => {
     try{
-        const queryPagu = await PaguModel.find({unit: unit, ADO: ADO, year: year});
+        const queryPagu = await PaguModel.findOne({unit: unit, ADO: ADO, year: new Date(year)});
         if (!queryPagu) {
             throw {name: "paguNotFound", message: `Pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak ditemukan`};
         }
