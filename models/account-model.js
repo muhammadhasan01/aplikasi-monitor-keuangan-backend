@@ -72,7 +72,7 @@ export const getAccount = async (id) => {
 
 export const getUsername = async(uname) =>{
     try {
-        const account = await AccountModel.find({username: uname});
+        const account = await AccountModel.findOne({username: uname});
         if (!account) {
             throw {name: "accountNotFound", message: `Account with username ${uname} was not found`};
         }
