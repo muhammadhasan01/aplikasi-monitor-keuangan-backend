@@ -25,6 +25,19 @@ export const getAccount = async (req, res) => {
     }
 };
 
+export const getUsername = async (req, res) => {
+    try {
+        const account = await Accounts.getUsername(req.params.uname);
+        return res.status(200).send(account);
+    } catch (err) {
+        if (err.name === "accountNotFound")
+            return res.status(404).send({
+                message: err.message
+            });
+        return res.status(500).send(err);
+    }
+};
+
 export const createAccount = async (req, res) => {
     try {
         const {ID_unit, name, username, email, userType, password} = req.body;
