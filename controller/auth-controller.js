@@ -4,6 +4,7 @@ import {AccountModel} from "../models/account-model.js";
 export const login = async (req, res) => {
     try {
         const { username, password } = req.body;
+        console.log("Body", req.body);
         if (!username || !password) {
             return res.status(400).json({
                message: "Input fields cannot be empty"
