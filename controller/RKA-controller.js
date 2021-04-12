@@ -13,10 +13,10 @@ export const getAllRKA = async (req, res) => {
     }
 };
 
-export const getPengeluaran = async (req, res) => {
+export const getPenggunaan = async (req, res) => {
     try {
         console.log("Masuk Controller");
-        const pengeluaran = await RKA.getPengeluaran();
+        const pengeluaran = await RKA.getPenggunaan();
         return res.status(200).send(pengeluaran);
     } catch (err) {
         return res.status(500).send(err);
@@ -36,9 +36,9 @@ export const getRKA = async (req, res) => {
     }
 };
 
-export const getPengeluaranRKA = async (req, res) => {
+export const getPenggunaanRKA = async (req, res) => {
     try {
-        const rka = await RKA.getPengeluaranRKA(req.params.unit, req.params.subunit, req.params.rincian);
+        const rka = await RKA.getPenggunaanRKA(req.params.unit, req.params.subunit, req.params.rincian);
         return res.status(200).send(rka);
     } catch (err) {
         if (err.name === "paguNotFound")
@@ -48,5 +48,9 @@ export const getPengeluaranRKA = async (req, res) => {
         return res.status(500).send(err);
     }
 };
+
+export const createRKA = async (req,res) => {
+    console.log("Bentar dulu")
+}
 
 export default router
