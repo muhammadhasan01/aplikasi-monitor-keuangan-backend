@@ -41,6 +41,7 @@ export const createUnit = async (req, res) => {
             res.status(400).send({
                 message: "required field cannot be empty"
             })
+            return
         }
         const newUser = await Units.createUnit(req.body);
         return res.status(201).send(newUser);

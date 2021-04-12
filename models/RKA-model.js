@@ -103,7 +103,17 @@ const RKASchema = Schema({
         required: true,
     },
 
+    rancangan: pengeluaranBulanan,
+    
     penggunaan: pengeluaranBulanan,
+
+    total_rancangan:{
+        type: Number
+    },
+
+    total_penggunaan: {
+        type: Number
+    },
 
 }, {
     timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" },
@@ -121,7 +131,18 @@ export const getAllRKA = async () => {
     }
 }
 
-export const getPengeluaran = async () => {
+export const getRancangan = async () => {
+    try {
+        const RKA = await RKAModel.find();
+        console.log(RKA[0].rancangan.februari)
+        console.log(RKA[0])
+        return RKA[0].rancangan;
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const getPenggunaan = async () => {
     try {
         const RKA = await RKAModel.find();
         console.log(RKA[0].penggunaan.februari)

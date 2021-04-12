@@ -41,8 +41,10 @@ export const getUsername = async (req, res) => {
 export const createAccount = async (req, res) => {
     try {
         const {ID_unit, name, username, email, userType, password} = req.body;
+        console.log(ID_unit);
         if (!ID_unit || !name || !username || !email || !userType || !password) {
             //print(req.body);
+            
             return res.status(400).send({
                 message: "required field cannot be empty"
             });
