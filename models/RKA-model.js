@@ -55,7 +55,7 @@ const pengeluaranBulanan = Schema({
 
 const RKASchema = Schema({
     year: {
-        type: Date,
+        type: Number,
         required: true,
     },
     unit: {
@@ -177,10 +177,16 @@ export const getPenggunaanRKA = async(unit, subunit, rincian) => {
     }
 }
 
-export const createRKA = async (unit, sub_unit, rincian_belanja, { year, ADO, kegiatan, subkegiatan, rincian_subkegiatan, jenis_belanja, satuan, volume, rancangan, penggunaan }) => {
-    const newRKA = new RKAModel({ year, unit, sub_unit, ADO, kegiatan, subkegiatan, rincian_subkegiatan, rincian_belanja, jenis_belanja, satuan, volume, rancangan, penggunaan });
+export const createRKA = async (unit, sub_unit, { year, ADO, kegiatan, subkegiatan, rincian_subkegiatan, rincian_belanja, jenis_belanja, satuan, volume, rancangan}, penggunaan, total_rancangan, total_penggunaan) => {
+    console.log("Masuk Model");
+    console.log(total_rancangan);
+    console.log(total_penggunaan);
+    const newRKA = new RKAModel({ year, unit, sub_unit, ADO, kegiatan, subkegiatan, rincian_subkegiatan, rincian_belanja, jenis_belanja, satuan, volume, rancangan, penggunaan, total_rancangan, total_penggunaan});
+    console.log("Ini RKA BARU");
+    console.log(newRKA);
     try {
         const rkaCreated = await newRKA.save();
+        console.log("Udah di save");
         return rkaCreated;
     } catch (err) {
         throw err;

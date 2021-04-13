@@ -1,5 +1,6 @@
 import express from 'express';
 import * as RKA from '../models/RKA-model.js';
+import * as pagu from '../models/pagu-model.js';
 
 const router = express.Router();
 
@@ -51,39 +52,60 @@ export const getPenggunaanRKA = async (req, res) => {
 
 export const createRKA = async (req, res) => {
     try {
+        const penggunaanAwal = {
+            "januari": 0,
+            "februari": 0,
+            "maret": 0,
+            "april": 0,
+            "mei": 0,
+            "juni": 0,
+            "juli": 0,
+            "agustus": 0,
+            "september": 0,
+            "oktober": 0,
+            "november": 0,
+            "desember": 0
+        };
+
         console.log(req.body);
-        const {year, ADO, kegiatan, subkegiatan, rincian_subkegiatan, jenis_belanja, satuan, volume, rancangan, penggunaan} = req.body;
+        const {year, ADO, kegiatan, subkegiatan, rincian_subkegiatan, rincian_belanja, jenis_belanja, satuan, volume, rancangan} = req.body;
         const unit = req.params.unit;
         const sub_unit = req.params.subunit; 
-        const rincian_belanja = req.params.rincian;
-        console.log(unit);
-        console.log(sub_unit);
 
-        console.log(year);
-        console.log(ADO);
-        console.log(kegiatan);
-        console.log(subkegiatan);
-
-        console.log(alokasi);
-        console.log(rancangan);
-        if (!year || !unit || !sub_unit || !ADO || !kegiatan || !subkegiatan || !rincian_subkegiatan || !rincian_belanja || !jenis_belanja || !satuan || !volume || !rancangan || !penggunaan) {
+        // TODO Check If Unit x Sub Unit x Rincian Belanja Exist
+        // If Exists, return error duplicate entity
+        
+        if (!year || !unit || !sub_unit || !ADO || !kegiatan || !subkegiatan || !rincian_subkegiatan || !rincian_belanja || !jenis_belanja || !satuan || !volume || !rancangan) {
             print(req.body);
             return res.status(400).send({
                 message: "required field cannot be empty"
             });
         }
+
         const alokasi_ado = await pagu.getAlokasiPagu(unit, ADO, year);
         const penggunaan_ado = await pagu.getPenggunaanPagu(unit, ADO, year);
-        const pengeluaran = penggunaan.januari + penggunaan.februari + penggunaan.maret + penggunaan.april + penggunaan.mei + penggunaan.juni + penggunaan.juli + penggunaan.agustus + penggunaan.september + penggunaan.oktober + penggunaan.november + penggunaan.desember;
-        if ((pengeluaran + penggunaan_ado) > alokasi_ado) {
+        const alokasi_RKA = rancangan.januari + rancangan.februari + rancangan.maret + rancangan.april + rancangan.mei + rancangan.juni + rancangan.juli + rancangan.agustus + rancangan.september + rancangan.oktober + rancangan.november + rancangan.desember;
+        
+        console.log(penggunaan_ado);
+        console.log(alokasi_ado);
+        console.log(alokasi_RKA);
+
+        if ((alokasi_RKA + penggunaan_ado) > alokasi_ado) {
             return res.status(400).send({
                 message: "insufficient funds"
             });
         }
+
+        console.log(penggunaanAwal);
+        console.log(alokasi_RKA);
+
+        var dana_awal = 0;
         
-        // const newRKA = await RKA.createRKA(unit, sub_unit, rincian_belanja, req.body);
-        // const newPagu = await pagu.updatePagu(unit, ADO, year, (pengeluaran + penggunaan_ado));
-        return res.status(201).send(newRKA);
+        const newRKA = await RKA.createRKA(unit, sub_unit, req.body, penggunaanAwal, alokasi_RKA, 0);
+        console.log(newRKA);
+        const newPagu = await pagu.addPenggunaanPagu(unit, ADO, year, alokasi_RKA);
+        console.log(newPagu)
+        // return res.status(201).send(newRKA);
     } catch (err) {
         return res.status(500).send(err);
     }
