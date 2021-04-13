@@ -1,11 +1,18 @@
 import mongoose from 'mongoose';
+import Bcrypt from 'bcryptjs';
+
 let Schema = mongoose.Schema;
 
 const accountSchema = Schema({
-    ID_unit: {
-        type: Schema.Types.ObjectId,
+    unit: {
+        type: String,
         required: true,
-        ref: 'unit',
+        trim: true,
+    },
+    subunit: {
+        type: String,
+        required: true,
+        trim: true
     },
     name : {
       type: String,
@@ -40,6 +47,7 @@ const accountSchema = Schema({
         required: true,
         trim: true,
         minlength: 5,
+        selected: false,
     },
 }, {
     strict: true,
@@ -51,8 +59,7 @@ export const AccountModel = mongoose.model('account', accountSchema);
 
 export const getAccounts = async () => {
     try {
-        const accounts = await AccountModel.find();
-        return accounts;
+        return await AccountModel.find();
     } catch (err) {
         throw err;
     }
@@ -82,8 +89,9 @@ export const getUsername = async(uname) =>{
     }
 }
 
-export const createAccount = async ({ ID_unit, name, username, email, userType, password }) => {
-    const newAccount = new AccountModel({ ID_unit, name, username, email, userType, password });
+export const createAccount = async ({ unit, subunit, name, username, email, userType, password }) => {
+    password = Bcrypt.hashSync(password, 10);
+    const newAccount = new AccountModel({ unit, subunit, name, username, email, userType, password });
     try {
         const accountCreated = await newAccount.save();
         return accountCreated;
@@ -94,6 +102,7 @@ export const createAccount = async ({ ID_unit, name, username, email, userType, 
 
 export const updateAccount = async (id, data) => {
     try {
+        data.password = Bcrypt.hashSync(data.password, 10);
         const updatedAccount = await AccountModel.findByIdAndUpdate(id, data, {new: true});
         if (!updatedAccount) {
             throw {name: "accountNotFound", message: `account with ID ${id} was not found`};
@@ -106,9 +115,13 @@ export const updateAccount = async (id, data) => {
 
 export const deleteAccount = async (id) => {
     try {
-        const deletedAccount = await AccountModel.findByIdAndRemove(id);
-        return deletedAccount;
+        return await AccountModel.findByIdAndRemove(id);
     } catch (err) {
         throw err;
     }
+}
+
+export const checkPassword = async (username, password) => {
+    const account = await AccountModel.findOne({ username: username }).select('password');
+    return Bcrypt.compareSync(password, account.password);
 }

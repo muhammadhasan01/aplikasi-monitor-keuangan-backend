@@ -6,9 +6,15 @@ dotenv.config()
 const { JWT_SECRET } = process.env;
 
 export const getToken = (user) => {
-    // TODO: Fix payload token
+    console.log("JWT", JWT_SECRET);
     return jwt.sign(
-        { username: user.username, userID: user._id, unit: user.unit, type: user.userType },
+        {
+            username: user.username,
+            userID: user._id,
+            unit: user.unit,
+            subunit: user.subunit,
+            type: user.userType
+        },
         JWT_SECRET,
         { expiresIn: "3h" }
     );

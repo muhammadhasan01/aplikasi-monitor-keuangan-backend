@@ -5,8 +5,7 @@ import dotenv from 'dotenv';
 import unitsRouter from './routes/units-router.js';
 import accountsRouter from './routes/account-router.js';
 import paguRouter from './routes/pagu-router.js'
-import RKARouter from './routes/RKA-router.js'
-import authsRouter from './routes/auth-router.js';
+
 dotenv.config();
 
 const app = express();
@@ -18,9 +17,7 @@ const CONNECTION_URL = process.env.ATLAS_URI;
 
 app.use('/units', unitsRouter);
 app.use('/accounts', accountsRouter);
-app.use('/auths', authsRouter);
 app.use('/pagu', paguRouter);
-app.use('/rka', RKARouter)
 
 try {
     mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true, useFindAndModify: false })

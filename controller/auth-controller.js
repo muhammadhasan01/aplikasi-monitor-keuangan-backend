@@ -1,5 +1,5 @@
 import {getToken} from "../auth/jwt-token.js";
-import {AccountModel} from "../models/account-model.js";
+import {AccountModel, checkPassword} from "../models/account-model.js";
 
 export const login = async (req, res) => {
     try {
@@ -17,8 +17,8 @@ export const login = async (req, res) => {
                 message: "The given username was not found"
             });
         }
-        // TODO: Check password the same with bcrypt
-        if (password !== user.password) {
+        let validPassword = await checkPassword(user.username, password);
+        if (!validPassword) {
             return res.status(400).json({
                message: "Invalid credentials"
             });
