@@ -67,7 +67,6 @@ export const createRKA = async (req, res) => {
             "desember": 0
         };
 
-        console.log(req.body);
         const {year, ADO, kegiatan, subkegiatan, rincian_subkegiatan, rincian_belanja, jenis_belanja, satuan, volume, rancangan} = req.body;
         const unit = req.params.unit;
         const sub_unit = req.params.subunit; 
@@ -85,10 +84,6 @@ export const createRKA = async (req, res) => {
         const alokasi_ado = await pagu.getAlokasiPagu(unit, ADO, year);
         const penggunaan_ado = await pagu.getPenggunaanPagu(unit, ADO, year);
         const alokasi_RKA = rancangan.januari + rancangan.februari + rancangan.maret + rancangan.april + rancangan.mei + rancangan.juni + rancangan.juli + rancangan.agustus + rancangan.september + rancangan.oktober + rancangan.november + rancangan.desember;
-        
-        console.log(penggunaan_ado);
-        console.log(alokasi_ado);
-        console.log(alokasi_RKA);
 
         if ((alokasi_RKA + penggunaan_ado) > alokasi_ado) {
             return res.status(400).send({
@@ -96,16 +91,10 @@ export const createRKA = async (req, res) => {
             });
         }
 
-        console.log(penggunaanAwal);
-        console.log(alokasi_RKA);
-
-        var dana_awal = 0;
-        
         const newRKA = await RKA.createRKA(unit, sub_unit, req.body, penggunaanAwal, alokasi_RKA, 0);
-        console.log(newRKA);
         const newPagu = await pagu.addPenggunaanPagu(unit, ADO, year, alokasi_RKA);
-        console.log(newPagu)
-        // return res.status(201).send(newRKA);
+        
+        return res.status(201).send(newRKA);
     } catch (err) {
         return res.status(500).send(err);
     }
