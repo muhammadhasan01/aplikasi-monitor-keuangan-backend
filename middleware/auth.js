@@ -13,11 +13,12 @@ export default (req, res, next) => {
             username: decodedToken.username,
             userID: decodedToken.userID,
             unit: decodedToken.unit,
+            subunit: decodedToken.subunit,
             type: decodedToken.userType
         };
         next();
     } catch (err) {
-        res.status(401).json({message: 'not authorized '});
+        res.status(401).json({ message: 'not authorized' });
     }
 }
 

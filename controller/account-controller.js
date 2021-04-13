@@ -1,4 +1,5 @@
 import express from 'express';
+import Bcrypt from 'bcryptjs';
 import * as Accounts from '../models/account-model.js';
 
 const router = express.Router();
@@ -40,9 +41,8 @@ export const getUsername = async (req, res) => {
 
 export const createAccount = async (req, res) => {
     try {
-        const {ID_unit, name, username, email, userType, password} = req.body;
-        if (!ID_unit || !name || !username || !email || !userType || !password) {
-            //print(req.body);
+        const { unit, subunit, name, username, email, userType, password } = req.body;
+        if (!unit || !subunit || !name || !username || !email || !userType || !password) {
             return res.status(400).send({
                 message: "required field cannot be empty"
             });
@@ -56,8 +56,8 @@ export const createAccount = async (req, res) => {
 
 export const updateAccount = async (req, res) => {
     try {
-        const {ID_unit, name, username, email, userType, password} = req.body;
-        if (!ID_unit || !name || !username || !email || !userType || !password) {
+        const { unit, subunit, name, username, email, userType, password } = req.body;
+        if (!unit || !subunit || !name || !username || !email || !userType || !password) {
             return res.status(400).send({
                 message: "required field cannot be empty"
             });
