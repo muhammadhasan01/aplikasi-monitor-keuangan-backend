@@ -51,11 +51,22 @@ export const getPenggunaanRKA = async (req, res) => {
 
 export const createRKA = async (req, res) => {
     try {
-        const {year, ADO, kegiatan, subkegiatan, rincian_subkegiatan, jenis_belanja, satuan, volume, penggunaan} = req.body;
+        console.log(req.body);
+        const {year, ADO, kegiatan, subkegiatan, rincian_subkegiatan, jenis_belanja, satuan, volume, rancangan, penggunaan} = req.body;
         const unit = req.params.unit;
         const sub_unit = req.params.subunit; 
         const rincian_belanja = req.params.rincian;
-        if (!year || !unit || !sub_unit || !ADO || !kegiatan || !subkegiatan || !rincian_subkegiatan || !rincian_belanja || !jenis_belanja || !satuan || !volume || !penggunaan) {
+        console.log(unit);
+        console.log(sub_unit);
+
+        console.log(year);
+        console.log(ADO);
+        console.log(kegiatan);
+        console.log(subkegiatan);
+
+        console.log(alokasi);
+        console.log(rancangan);
+        if (!year || !unit || !sub_unit || !ADO || !kegiatan || !subkegiatan || !rincian_subkegiatan || !rincian_belanja || !jenis_belanja || !satuan || !volume || !rancangan || !penggunaan) {
             print(req.body);
             return res.status(400).send({
                 message: "required field cannot be empty"
@@ -70,8 +81,8 @@ export const createRKA = async (req, res) => {
             });
         }
         
-        const newRKA = await RKA.createRKA(unit, sub_unit, rincian_belanja, req.body);
-        const newPagu = await pagu.updatePagu(unit, ADO, year, (pengeluaran + penggunaan_ado));
+        // const newRKA = await RKA.createRKA(unit, sub_unit, rincian_belanja, req.body);
+        // const newPagu = await pagu.updatePagu(unit, ADO, year, (pengeluaran + penggunaan_ado));
         return res.status(201).send(newRKA);
     } catch (err) {
         return res.status(500).send(err);
