@@ -103,7 +103,17 @@ const RKASchema = Schema({
         required: true,
     },
 
+    rancangan: pengeluaranBulanan,
+    
     penggunaan: pengeluaranBulanan,
+
+    total_rancangan:{
+        type: Number
+    },
+
+    total_penggunaan: {
+        type: Number
+    },
 
 }, {
     timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" },
@@ -121,7 +131,18 @@ export const getAllRKA = async () => {
     }
 }
 
-export const getPengeluaran = async () => {
+export const getRancangan = async () => {
+    try {
+        const RKA = await RKAModel.find();
+        console.log(RKA[0].rancangan.februari)
+        console.log(RKA[0])
+        return RKA[0].rancangan;
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const getPenggunaan = async () => {
     try {
         const RKA = await RKAModel.find();
         console.log(RKA[0].penggunaan.februari)
@@ -144,7 +165,7 @@ export const getRKA = async(unit, subunit, rincian) => {
     }
 }
 
-export const getPengeluaranRKA = async(unit, subunit, rincian) => {
+export const getPenggunaanRKA = async(unit, subunit, rincian) => {
     try{
         const queryRKA = await RKAModel.findOne({unit: unit, sub_unit: subunit, rincian_belanja: rincian});
         if (!queryRKA) {
@@ -155,4 +176,24 @@ export const getPengeluaranRKA = async(unit, subunit, rincian) => {
         throw err;
     }
 }
+
+export const createRKA = async (unit, sub_unit, rincian_belanja, { year, ADO, kegiatan, subkegiatan, rincian_subkegiatan, jenis_belanja, satuan, volume, rancangan, penggunaan }) => {
+    const newRKA = new RKAModel({ year, unit, sub_unit, ADO, kegiatan, subkegiatan, rincian_subkegiatan, rincian_belanja, jenis_belanja, satuan, volume, rancangan, penggunaan });
+    try {
+        const rkaCreated = await newRKA.save();
+        return rkaCreated;
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const deleteRKA = async (unit, sub_unit, rincian_belanja) => {
+    try {
+        const deletedRKA = await RKAModel.findOneAndRemove({ unit: unit, sub_unit: sub_unit, rincian_belanja: rincian_belanja });
+        return deletedRKA;
+    } catch (err) {
+        throw err;
+    }
+}
+
 

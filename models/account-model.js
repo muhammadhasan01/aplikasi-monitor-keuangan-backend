@@ -39,7 +39,7 @@ const accountSchema = Schema({
         type: String,
         required: true,
         trim: true,
-        select: false,
+        minlength: 5,
     },
 }, {
     strict: true,
@@ -47,7 +47,7 @@ const accountSchema = Schema({
     timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" },
 });
 
-const AccountModel = mongoose.model('account', accountSchema);
+export const AccountModel = mongoose.model('account', accountSchema);
 
 export const getAccounts = async () => {
     try {

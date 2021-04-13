@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const {JWT_SECRET} = process.env;
+const { JWT_SECRET } = process.env;
 
 export default (req, res, next) => {
     try {
