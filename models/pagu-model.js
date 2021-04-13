@@ -73,7 +73,7 @@ export const updateAlokasiPagu = async(unit, ADO, year, value) =>{
     }
 } 
 
-export const addPenggunaanPagu = async(unit, ADO, year, amount) =>{
+export const changePenggunaanPagu = async(unit, ADO, year, amount) =>{
     try{
         const updatedPagu = await PaguModel.findOneAndUpdate({unit: unit, ADO: ADO, year: year}, {$inc: {penggunaan: amount}}, {new: true});
         if (!updatedPagu) {

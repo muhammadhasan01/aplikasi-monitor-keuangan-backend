@@ -153,13 +153,26 @@ export const getPenggunaan = async () => {
     }
 }
 
+
 export const getRKA = async(unit, subunit, rincian) => {
     try{
         const queryRKA = await RKAModel.findOne({unit: unit, sub_unit: subunit, rincian_belanja: rincian});
         if (!queryRKA) {
-            throw {name: "RKANotFound", message: `RKA ${unit} subunit ${unit} untuk ${rincian_belanja} tidak ditemukan`};
+            throw {name: "RKANotFound", message: `RKA ${unit} subunit ${unit} untuk ${rincian} tidak ditemukan`};
         }
         return queryRKA;
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const isRKAExist = async(unit, subunit, rincian) => {
+    try{
+        const queryRKA = await RKAModel.findOne({unit: unit, sub_unit: subunit, rincian_belanja: rincian});
+        if (!queryRKA) {
+            return false;
+        }
+        return true;
     } catch (err) {
         throw err;
     }
@@ -169,7 +182,7 @@ export const getPenggunaanRKA = async(unit, subunit, rincian) => {
     try{
         const queryRKA = await RKAModel.findOne({unit: unit, sub_unit: subunit, rincian_belanja: rincian});
         if (!queryRKA) {
-            throw {name: "RKANotFound", message: `RKA ${unit} subunit ${unit} untuk ${rincian_belanja} tidak ditemukan`};
+            throw {name: "RKANotFound", message: `RKA ${unit} subunit ${unit} untuk ${rincian} tidak ditemukan`};
         }
         return queryRKA.penggunaan;
     } catch (err) {
@@ -178,15 +191,9 @@ export const getPenggunaanRKA = async(unit, subunit, rincian) => {
 }
 
 export const createRKA = async (unit, sub_unit, { year, ADO, kegiatan, subkegiatan, rincian_subkegiatan, rincian_belanja, jenis_belanja, satuan, volume, rancangan}, penggunaan, total_rancangan, total_penggunaan) => {
-    console.log("Masuk Model");
-    console.log(total_rancangan);
-    console.log(total_penggunaan);
     const newRKA = new RKAModel({ year, unit, sub_unit, ADO, kegiatan, subkegiatan, rincian_subkegiatan, rincian_belanja, jenis_belanja, satuan, volume, rancangan, penggunaan, total_rancangan, total_penggunaan});
-    console.log("Ini RKA BARU");
-    console.log(newRKA);
     try {
         const rkaCreated = await newRKA.save();
-        console.log("Udah di save");
         return rkaCreated;
     } catch (err) {
         throw err;

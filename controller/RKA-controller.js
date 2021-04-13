@@ -71,8 +71,13 @@ export const createRKA = async (req, res) => {
         const unit = req.params.unit;
         const sub_unit = req.params.subunit; 
 
-        // TODO Check If Unit x Sub Unit x Rincian Belanja Exist
-        // If Exists, return error duplicate entity
+        //Check if there is duplicate RKA
+        const RKAExist = await RKA.isRKAExist(unit, sub_unit, rincian_belanja);
+        if(RKAExist){
+            return res.status(400).send({
+                message: "There are duplicate records"
+            });
+        }
         
         if (!year || !unit || !sub_unit || !ADO || !kegiatan || !subkegiatan || !rincian_subkegiatan || !rincian_belanja || !jenis_belanja || !satuan || !volume || !rancangan) {
             print(req.body);
@@ -92,7 +97,7 @@ export const createRKA = async (req, res) => {
         }
 
         const newRKA = await RKA.createRKA(unit, sub_unit, req.body, penggunaanAwal, alokasi_RKA, 0);
-        const newPagu = await pagu.addPenggunaanPagu(unit, ADO, year, alokasi_RKA);
+        const newPagu = await pagu.changePenggunaanPagu(unit, ADO, year, alokasi_RKA);
         
         return res.status(201).send(newRKA);
     } catch (err) {
@@ -104,21 +109,24 @@ export const deleteRKA = async (req, res) => {
     try {
         const unit = req.params.unit;
         const sub_unit = req.params.subunit; 
-        const rincian_belanja = req.params.rincian;
+        const {rincian_belanja} = req.body;
+        
         const rka = await RKA.getRKA(unit, sub_unit, rincian_belanja);
+
         const year = rka.year;
-        const penggunaan = await RKA.getPengeluaranRKA(unit, sub_unit, rincian_belanja);
-        const pengeluaran = penggunaan.januari + penggunaan.februari + penggunaan.maret + penggunaan.april + penggunaan.mei + penggunaan.juni + penggunaan.juli + penggunaan.agustus + penggunaan.september + penggunaan.oktober + penggunaan.november + penggunaan.desember;
-        const penggunaan_ado = await pagu.getPenggunaanPagu(unit, ADO, year);
+        const ADO = rka.ADO;
+        const total_rancangan = rka.total_rancangan;
 
         const deletedRKA = await RKA.deleteRKA(unit, sub_unit, rincian_belanja);
-        const newPagu = await pagu.updatePagu(unit, ADO, year, (penggunaan_ado - pengeluaran));
+        const newPagu = await pagu.changePenggunaanPagu(unit, ADO, year, -total_rancangan);
+
         return res.status(200).send(deletedRKA);
     } catch (err) {
-        if (err.name === "accountNotFound")
+        if (err.name === "RKANotFound") 
             return res.status(404).send({
                 message: err.message
             });
+
         return res.status(500).send(err);
     }
 }
