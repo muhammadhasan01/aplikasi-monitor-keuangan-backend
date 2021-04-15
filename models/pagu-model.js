@@ -53,8 +53,8 @@ export const getPagu = async(unit, ado, year) => {
 
 export const insertNewPagu = async(unit, ADO, year, alokasi, penggunaan) => {
     const newPagu = new PaguModel({unit, ADO, year, alokasi, penggunaan})
-    try{
-        paguCreated = await newPagu.save();
+    try {
+        const paguCreated = await newPagu.save();
         return paguCreated;
     } catch (err) {
         throw err;
