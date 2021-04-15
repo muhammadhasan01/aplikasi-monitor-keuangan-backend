@@ -6,10 +6,10 @@ dotenv.config()
 const { JWT_SECRET } = process.env;
 
 export const getToken = (user) => {
-    console.log("JWT", JWT_SECRET);
     return jwt.sign(
         {
             username: user.username,
+            name: user.name,
             userID: user._id,
             unit: user.unit,
             subunit: user.subunit,
