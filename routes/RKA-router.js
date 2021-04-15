@@ -8,7 +8,7 @@ router.get('/s', RKA.getPenggunaan);
 router.post('', RKA.createRKA);
 router.get('/:unit/:subunit/:rincian', RKA.getRKA);
 router.get('/:unit/:subunit/:rincian/s', RKA.getPenggunaanRKA);
-router.post('/:unit/:subunit/:rincian', RKA.createRKA);
-router.delete('/:unit/:subunit/:rincian', RKA.deleteRKA);
+router.post('/:unit/:subunit', RKA.createRKA);
+router.delete('/:unit/:subunit', RKA.deleteRKA);
 
 export default router;

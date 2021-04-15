@@ -55,7 +55,7 @@ const pengeluaranBulanan = Schema({
 
 const RKASchema = Schema({
     year: {
-        type: Date,
+        type: Number,
         required: true,
     },
     unit: {
@@ -153,13 +153,26 @@ export const getPenggunaan = async () => {
     }
 }
 
+
 export const getRKA = async(unit, subunit, rincian) => {
     try{
         const queryRKA = await RKAModel.findOne({unit: unit, sub_unit: subunit, rincian_belanja: rincian});
         if (!queryRKA) {
-            throw {name: "RKANotFound", message: `RKA ${unit} subunit ${unit} untuk ${rincian_belanja} tidak ditemukan`};
+            throw {name: "RKANotFound", message: `RKA ${unit} subunit ${unit} untuk ${rincian} tidak ditemukan`};
         }
         return queryRKA;
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const isRKAExist = async(unit, subunit, rincian) => {
+    try{
+        const queryRKA = await RKAModel.findOne({unit: unit, sub_unit: subunit, rincian_belanja: rincian});
+        if (!queryRKA) {
+            return false;
+        }
+        return true;
     } catch (err) {
         throw err;
     }
@@ -169,7 +182,7 @@ export const getPenggunaanRKA = async(unit, subunit, rincian) => {
     try{
         const queryRKA = await RKAModel.findOne({unit: unit, sub_unit: subunit, rincian_belanja: rincian});
         if (!queryRKA) {
-            throw {name: "RKANotFound", message: `RKA ${unit} subunit ${unit} untuk ${rincian_belanja} tidak ditemukan`};
+            throw {name: "RKANotFound", message: `RKA ${unit} subunit ${unit} untuk ${rincian} tidak ditemukan`};
         }
         return queryRKA.penggunaan;
     } catch (err) {
@@ -177,8 +190,8 @@ export const getPenggunaanRKA = async(unit, subunit, rincian) => {
     }
 }
 
-export const createRKA = async (unit, sub_unit, rincian_belanja, { year, ADO, kegiatan, subkegiatan, rincian_subkegiatan, jenis_belanja, satuan, volume, rancangan, penggunaan }) => {
-    const newRKA = new RKAModel({ year, unit, sub_unit, ADO, kegiatan, subkegiatan, rincian_subkegiatan, rincian_belanja, jenis_belanja, satuan, volume, rancangan, penggunaan });
+export const createRKA = async (unit, sub_unit, { year, ADO, kegiatan, subkegiatan, rincian_subkegiatan, rincian_belanja, jenis_belanja, satuan, volume, rancangan}, penggunaan, total_rancangan, total_penggunaan) => {
+    const newRKA = new RKAModel({ year, unit, sub_unit, ADO, kegiatan, subkegiatan, rincian_subkegiatan, rincian_belanja, jenis_belanja, satuan, volume, rancangan, penggunaan, total_rancangan, total_penggunaan});
     try {
         const rkaCreated = await newRKA.save();
         return rkaCreated;

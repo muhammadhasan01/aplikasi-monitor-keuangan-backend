@@ -13,7 +13,7 @@ const PaguSchema = Schema({
         ref: 'ados',
     },
     year: {
-        type: Date,
+        type: Number,
         required: true,
     },
     alokasi: {
@@ -61,7 +61,7 @@ export const insertNewPagu = async(unit, ADO, year, alokasi, penggunaan) => {
     }
 }
 
-export const updatePagu = async(unit, ADO, year, value) =>{
+export const updateAlokasiPagu = async(unit, ADO, year, value) =>{
     try{
         const updatedPagu = await PaguModel.findOneAndUpdate({unit: unit, ADO: ADO, year: new Date(year)}, {alokasi: value}, {new: true});
         if (!updatedPagu) {
@@ -73,9 +73,9 @@ export const updatePagu = async(unit, ADO, year, value) =>{
     }
 } 
 
-export const updatePenggunaanPagu = async(unit, ADO, year, amount) =>{
+export const changePenggunaanPagu = async(unit, ADO, year, amount) =>{
     try{
-        const updatedPagu = await PaguModel.findOneAndUpdate({unit: unit, ADO: ADO, year: new Date(year)}, {$inc: {penggunaan: amount}}, {new: true});
+        const updatedPagu = await PaguModel.findOneAndUpdate({unit: unit, ADO: ADO, year: year}, {$inc: {penggunaan: amount}}, {new: true});
         if (!updatedPagu) {
             throw {name: "paguNotFound", message: `Update pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak berhasil`};
         }
@@ -87,9 +87,11 @@ export const updatePenggunaanPagu = async(unit, ADO, year, amount) =>{
 
 export const getAlokasiPagu = async(unit, ADO, year) => {
     try{
-        const queryPagu = await PaguModel.findOne({unit: unit, ADO: ADO, year: new Date(year)});
+        console.log(year);
+        const queryPagu = await PaguModel.findOne({unit: unit, ADO: ADO, year: year});
+        console.log(queryPagu)
         if (!queryPagu) {
-            throw {name: "paguNotFound", message: `Pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak ditemukan`};
+            throw {name: "paguNotFound", message: `Alokasi Pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak ditemukan`};
         }
         return queryPagu.alokasi;
     } catch (err) {
@@ -99,9 +101,9 @@ export const getAlokasiPagu = async(unit, ADO, year) => {
 
 export const getPenggunaanPagu = async(unit, ADO, year) => {
     try{
-        const queryPagu = await PaguModel.findOne({unit: unit, ADO: ADO, year: new Date(year)});
+        const queryPagu = await PaguModel.findOne({unit: unit, ADO: ADO, year: year});
         if (!queryPagu) {
-            throw {name: "paguNotFound", message: `Pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak ditemukan`};
+            throw {name: "paguNotFound", message: `Penggunaan Pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak ditemukan`};
         }
         return queryPagu.penggunaan;
     } catch (err) {
@@ -111,9 +113,9 @@ export const getPenggunaanPagu = async(unit, ADO, year) => {
 
 export const getSisaPagu = async(unit, ADO, year) => {
     try{
-        const queryPagu = await PaguModel.findOne({unit: unit, ADO: ADO, year: new Date(year)});
+        const queryPagu = await PaguModel.findOne({unit: unit, ADO: ADO, year: year});
         if (!queryPagu) {
-            throw {name: "paguNotFound", message: `Pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak ditemukan`};
+            throw {name: "paguNotFound", message: `Sisa Pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak ditemukan`};
         }
         return queryPagu.alokasi - queryPagu.penggunaan;
     } catch (err) {
