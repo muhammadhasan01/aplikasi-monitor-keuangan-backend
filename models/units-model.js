@@ -8,7 +8,7 @@ const unitsSchema = mongoose.Schema({
         trim: true,
     },
     code: {
-        type: String,
+        type: Number,
         unique: true
     },
     subunit: {
