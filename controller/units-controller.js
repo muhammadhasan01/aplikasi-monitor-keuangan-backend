@@ -12,6 +12,16 @@ export const getUnits = async (req, res) => {
     }
 };
 
+export const getDistinctUnits = async (req, res) => {
+    try {
+        console.log("Masuk controller");
+        const units = await Units.getDistinctUnits();
+        return res.status(200).send(units);
+    } catch (err) {
+        return res.status(500).send(err);
+    }
+};
+
 export const getSubUnits = async (req, res) => {
     try {
         const subunits = await Units.getSubUnits();
@@ -47,15 +57,32 @@ export const getSubUnitsForUnits = async (req, res) => {
     }
 };
 
+
 export const createUnit = async (req, res) => {
     try {
-        const {name, code, subunit} = req.body;
-        if (!name || !code || !subunit) {
-            res.status(400).send({
+        const {unit, code, subunit} = req.body;
+
+        console.log(unit);
+        console.log(code);
+        console.log(subunit);
+
+        if (!unit || !code || !subunit) {
+            return res.status(400).send({
                 message: "required field cannot be empty"
             })
-            return
         }
+
+        const UnitExist = await Units.isUnitExist(unit, code, subunit)
+
+        if(UnitExist)
+        {
+            console.log("Ada unitnya");
+            return res.status(400).send({
+                message: "there are duplicate units"
+            });
+        }
+            
+        
         const newUser = await Units.createUnit(req.body);
         return res.status(201).send(newUser);
     } catch (err) {

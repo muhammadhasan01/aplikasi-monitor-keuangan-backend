@@ -5,9 +5,20 @@ const adosSchema = mongoose.Schema({
         type: String,
         required: true,
         unique: true
+    },
+    detail: {
+        type: String
     }
 });
 
-const Units = mongoose.model('ados', adosSchema);
+const ADO = mongoose.model('ados', adosSchema);
 
-export default Units;
+export const getDistinctADOs = async () => {
+    try {
+        const ADOs = await ADO.distinct("name");
+        return ADOs;
+    } catch (err) {
+        throw err;
+    }
+}
+

@@ -29,6 +29,16 @@ export const getUnits = async () => {
     }
 }
 
+export const getDistinctUnits = async () => {
+    try {
+        console.log("MasukModel");
+        const units = await UnitsModel.distinct("unit");
+        return units;
+    } catch (err) {
+        throw err;
+    }
+}
+
 export const getSubUnits = async () => {
     try {
         const subUnits = await UnitsModel.distinct("subunit");
@@ -53,6 +63,20 @@ export const createUnit = async ({ unit, code, subunit }) => {
     try {
         const unitCreated = await newUnit.save();
         return unitCreated;
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const isUnitExist = async(unit, code, subunit) => {
+    try{
+        console.log("Masuk model");
+        const queryUnit = await UnitsModel.findOne({unit: unit, code: code, subunit: subunit});
+        console.log(queryUnit);
+        if (!queryUnit) {
+            return false;
+        }
+        return true;
     } catch (err) {
         throw err;
     }

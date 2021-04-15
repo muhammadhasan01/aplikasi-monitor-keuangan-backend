@@ -71,17 +71,18 @@ export const createRKA = async (req, res) => {
         const unit = req.params.unit;
         const sub_unit = req.params.subunit; 
 
+        
+        if (!year || !unit || !sub_unit || !ADO || !kegiatan || !subkegiatan || !rincian_subkegiatan || !rincian_belanja || !jenis_belanja || !satuan || !volume || !rancangan) {
+            return res.status(400).send({
+                message: "required field cannot be empty"
+            });
+        }
+
         //Check if there is duplicate RKA
         const RKAExist = await RKA.isRKAExist(unit, sub_unit, rincian_belanja);
         if(RKAExist){
             return res.status(400).send({
                 message: "There are duplicate records"
-            });
-        }
-        
-        if (!year || !unit || !sub_unit || !ADO || !kegiatan || !subkegiatan || !rincian_subkegiatan || !rincian_belanja || !jenis_belanja || !satuan || !volume || !rancangan) {
-            return res.status(400).send({
-                message: "required field cannot be empty"
             });
         }
 
@@ -149,7 +150,6 @@ export const inputPengeluaran = async (req, res) => {
             });
         }
 
-        const 
         //TODO Gimana cara ngemap bulan sekarang buat nambahin penggunaan bulan ini sejumlah amount
         const updatedRKA = await RKA.inputPengeluaran(unit, sub_unit, rincian_belanja, amount);
 
