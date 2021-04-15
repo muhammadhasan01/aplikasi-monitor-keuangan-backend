@@ -23,8 +23,21 @@ export const getSubUnits = async (req, res) => {
 
 export const getUnit = async (req, res) => {
     try {
-        const unit = await Units.getUnit(req.params.id);
+        const unit = await Units.getUnit(req.params.unit);
         return res.status(200).send(unit);
+    } catch (err) {
+        if (err.name === "unitNotFound")
+            return res.status(404).send({
+                message: err.message
+            });
+        return res.status(500).send(err);
+    }
+};
+
+export const getSubUnitsForUnits = async (req, res) => {
+    try {
+        const subunits = await Units.getSubUnitsForUnits(req.params.unit);
+        return res.status(200).send(subunits);
     } catch (err) {
         if (err.name === "unitNotFound")
             return res.status(404).send({

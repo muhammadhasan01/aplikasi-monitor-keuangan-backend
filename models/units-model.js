@@ -1,14 +1,14 @@
 import mongoose from 'mongoose';
 
 const unitsSchema = mongoose.Schema({
-    name: {
+    unit: {
         type: String,
         required: true,
         unique: true,
         trim: true,
     },
     code: {
-        type: Number,
+        type: String,
         unique: true
     },
     subunit: {
@@ -38,8 +38,18 @@ export const getSubUnits = async () => {
     }
 }
 
-export const createUnit = async ({ name, code, subunit }) => {
-    const newUnit = new UnitsModel({ name, code, subunit });
+export const getSubUnitsForUnits = async(unit) => {
+    try{
+        const subunits = await UnitsModel.distinct("subunit", { unit: unit })
+        return subunits;
+    }
+    catch(err){
+        throw err;
+    }
+}
+
+export const createUnit = async ({ unit, code, subunit }) => {
+    const newUnit = new UnitsModel({ unit, code, subunit });
     try {
         const unitCreated = await newUnit.save();
         return unitCreated;
@@ -48,9 +58,9 @@ export const createUnit = async ({ name, code, subunit }) => {
     }
 }
 
-export const getUnit = async (id) => {
+export const getUnit = async (name) => {
     try {
-        const unit = await UnitsModel.findById(id);
+        const unit = await UnitsModel.find({unit: name});
         if (!unit) {
             throw {name: "unitNotFound", message: `unit with ${id} was not found`};
         }

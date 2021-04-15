@@ -80,7 +80,6 @@ export const createRKA = async (req, res) => {
         }
         
         if (!year || !unit || !sub_unit || !ADO || !kegiatan || !subkegiatan || !rincian_subkegiatan || !rincian_belanja || !jenis_belanja || !satuan || !volume || !rancangan) {
-            print(req.body);
             return res.status(400).send({
                 message: "required field cannot be empty"
             });
@@ -99,6 +98,7 @@ export const createRKA = async (req, res) => {
         const newRKA = await RKA.createRKA(unit, sub_unit, req.body, penggunaanAwal, alokasi_RKA, 0);
         const newPagu = await pagu.changePenggunaanPagu(unit, ADO, year, alokasi_RKA);
         
+        console.log(newPagu);
         return res.status(201).send(newRKA);
     } catch (err) {
         return res.status(500).send(err);
@@ -130,5 +130,40 @@ export const deleteRKA = async (req, res) => {
         return res.status(500).send(err);
     }
 }
+
+//Input Pengeluaran
+export const inputPengeluaran = async (req, res) => {
+    try {
+        const unit = req.params.unit;
+        const sub_unit = req.params.subunit; 
+        const {rincian_belanja, amount} = req.body;
+
+        const rka = await RKA.getRKA(unit, sub_unit, rincian_belanja);
+
+        const total_penggunaan = rka.total_penggunaan;
+        const total_rancangan = rka.total_rancangan;
+
+        if(total_penggunaan + amount > total_rancangan){
+            return res.status(400).send({
+                message: "insufficient funds"
+            });
+        }
+
+        const 
+        //TODO Gimana cara ngemap bulan sekarang buat nambahin penggunaan bulan ini sejumlah amount
+        const updatedRKA = await RKA.inputPengeluaran(unit, sub_unit, rincian_belanja, amount);
+
+        console.log(updatedRKA)
+
+        
+        return res.status(200).send(rka);
+    } catch (err) {
+        if (err.name === "paguNotFound")
+            return res.status(404).send({
+                message: err.message
+            });
+        return res.status(500).send(err);
+    }
+};
 
 export default router
