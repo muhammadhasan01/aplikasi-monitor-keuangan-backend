@@ -6,7 +6,6 @@ const router = express.Router();
 
 export const getAllRKA = async (req, res) => {
     try {
-        console.log("Masuk Controller");
         const allRKA = await RKA.getAllRKA();
         return res.status(200).send(allRKA);
     } catch (err) {
@@ -16,7 +15,6 @@ export const getAllRKA = async (req, res) => {
 
 export const getPenggunaan = async (req, res) => {
     try {
-        console.log("Masuk Controller");
         const pengeluaran = await RKA.getPenggunaan();
         return res.status(200).send(pengeluaran);
     } catch (err) {
@@ -26,10 +24,14 @@ export const getPenggunaan = async (req, res) => {
 
 export const getRKA = async (req, res) => {
     try {
-        const rka = await RKA.getRKA(req.params.unit, req.params.subunit, req.params.rincian);
+        var unit = req.params.unit;
+        var subunit = req.params.subunit;
+        var rincian = req.params.rincian;
+        
+        const rka = await RKA.getRKA(unit, subunit, rincian);
         return res.status(200).send(rka);
     } catch (err) {
-        if (err.name === "paguNotFound")
+        if (err.name === "RKANotFound")
             return res.status(404).send({
                 message: err.message
             });
@@ -39,10 +41,14 @@ export const getRKA = async (req, res) => {
 
 export const getPenggunaanRKA = async (req, res) => {
     try {
-        const rka = await RKA.getPenggunaanRKA(req.params.unit, req.params.subunit, req.params.rincian);
+        var unit = req.params.unit;
+        var subunit = req.params.subunit;
+        var rincian = req.params.rincian;
+
+        const rka = await RKA.getPenggunaanRKA(unit, subunit, rincian);
         return res.status(200).send(rka);
     } catch (err) {
-        if (err.name === "paguNotFound")
+        if (err.name === "RKANotFound")
             return res.status(404).send({
                 message: err.message
             });
@@ -52,17 +58,13 @@ export const getPenggunaanRKA = async (req, res) => {
 
 export const getRKAUnit = async (req, res) => {
     try {
-        console.log("Masuk controller");
-
         var unit = req.params.unit;
         var subunit = req.params.subunit;
 
-        console.log(unit);
-        console.log(subunit);
-        const rka = await RKA.getRKAUnit(req.params.unit, req.params.subunit);
+        const rka = await RKA.getRKAUnit(unit, subunit);
         return res.status(200).send(rka);
     } catch (err) {
-        if (err.name === "paguNotFound")
+        if (err.name === "RKANotFound")
             return res.status(404).send({
                 message: err.message
             });

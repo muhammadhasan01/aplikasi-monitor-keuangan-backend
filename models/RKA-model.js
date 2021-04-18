@@ -145,8 +145,6 @@ export const getRancangan = async () => {
 export const getPenggunaan = async () => {
     try {
         const RKA = await RKAModel.find();
-        console.log(RKA[0].penggunaan.februari)
-        console.log(RKA[0])
         return RKA[0].penggunaan;
     } catch (err) {
         throw err;
@@ -192,7 +190,6 @@ export const getPenggunaanRKA = async(unit, subunit, rincian) => {
 
 export const getRKAUnit = async(unit, subunit) => {
     try{
-        console.log(unit, subunit);
         const queryRKA = await RKAModel.find({unit: unit, sub_unit: subunit});
         if (!queryRKA) {
             throw {name: "RKANotFound", message: `RKA ${unit} subunit ${unit} tidak ditemukan`};
