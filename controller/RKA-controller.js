@@ -50,6 +50,22 @@ export const getPenggunaanRKA = async (req, res) => {
     }
 };
 
+export const getRKAUnit = async (req, res) => {
+    try {
+        unit = req.params.unit;
+        subunit = req.params.subunit;
+        const rka = await RKA.getRKAUnit(req.params.unit, req.params.subunit);
+        return res.status(200).send(rka);
+    } catch (err) {
+        if (err.name === "paguNotFound")
+            return res.status(404).send({
+                message: err.message
+            });
+        return res.status(500).send(err);
+    }
+};
+
+
 export const createRKA = async (req, res) => {
     try {
         const penggunaanAwal = {

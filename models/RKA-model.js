@@ -190,6 +190,18 @@ export const getPenggunaanRKA = async(unit, subunit, rincian) => {
     }
 }
 
+export const getRKAUnit = async(unit, subunit) => {
+    try{
+        const queryRKA = await RKAModel.find({unit: unit, sub_unit: subunit});
+        if (!queryRKA) {
+            throw {name: "RKANotFound", message: `RKA ${unit} subunit ${unit} tidak ditemukan`};
+        }
+        return queryRKA.penggunaan;
+    } catch (err) {
+        throw err;
+    }
+}
+
 export const createRKA = async (unit, sub_unit, { year, ADO, kegiatan, subkegiatan, rincian_subkegiatan, rincian_belanja, jenis_belanja, satuan, volume, rancangan}, penggunaan, total_rancangan, total_penggunaan) => {
     const newRKA = new RKAModel({ year, unit, sub_unit, ADO, kegiatan, subkegiatan, rincian_subkegiatan, rincian_belanja, jenis_belanja, satuan, volume, rancangan, penggunaan, total_rancangan, total_penggunaan});
     try {
