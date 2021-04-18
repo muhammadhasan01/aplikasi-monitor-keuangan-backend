@@ -27,7 +27,7 @@ export const getRKA = async (req, res) => {
         var unit = req.params.unit;
         var subunit = req.params.subunit;
         var rincian = req.params.rincian;
-        
+
         const rka = await RKA.getRKA(unit, subunit, rincian);
         return res.status(200).send(rka);
     } catch (err) {
@@ -161,7 +161,7 @@ export const inputPengeluaran = async (req, res) => {
     try {
         const unit = req.params.unit;
         const sub_unit = req.params.subunit; 
-        const {rincian_belanja, amount} = req.body;
+        const {rincian_belanja, amount, bulan} = req.body;
 
         const RKAExist = await RKA.isRKAExist(unit, sub_unit, rincian_belanja);
         if(!RKAExist){
@@ -182,7 +182,7 @@ export const inputPengeluaran = async (req, res) => {
         }
 
         //TODO Gimana cara ngemap bulan sekarang buat nambahin penggunaan bulan ini sejumlah amount
-        const updatedRKA = await RKA.inputPengeluaran(unit, sub_unit, rincian_belanja, amount);
+        const updatedRKA = await RKA.inputPengeluaran(unit, sub_unit, rincian_belanja, amount, bulan);
 
         console.log(updatedRKA);
 
