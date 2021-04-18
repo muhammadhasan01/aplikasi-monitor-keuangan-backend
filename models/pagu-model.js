@@ -7,6 +7,10 @@ const PaguSchema = Schema({
         required: true,
         ref: 'unit',
     },
+    subunit: {
+        type: String,
+        required: true,
+    },
     ADO: {
         type: String,
         required: true,
@@ -39,9 +43,9 @@ export const getAllPagu = async () => {
     }
 }
 
-export const getPagu = async(unit, ado, year) => {
+export const getPagu = async(unit, subunit, ado, year) => {
     try{
-        const queryPagu = await PaguModel.findOne({unit: unit, ADO: ado, year: new Date(year)});
+        const queryPagu = await PaguModel.findOne({unit: unit, subunit: subunit, ADO: ado, year: new Date(year)});
         if (!queryPagu) {
             throw {name: "paguNotFound", message: `Pagu anggaran ${unit} untuk ${ado} tahun ${year} tidak ditemukan`};
         }
@@ -51,8 +55,8 @@ export const getPagu = async(unit, ado, year) => {
     }
 }
 
-export const insertNewPagu = async(unit, ADO, year, alokasi, penggunaan) => {
-    const newPagu = new PaguModel({unit, ADO, year, alokasi, penggunaan})
+export const insertNewPagu = async(unit, subunit, ADO, year, alokasi, penggunaan) => {
+    const newPagu = new PaguModel({unit, subunit, ADO, year, alokasi, penggunaan})
     try{
         paguCreated = await newPagu.save();
         return paguCreated;
@@ -61,9 +65,9 @@ export const insertNewPagu = async(unit, ADO, year, alokasi, penggunaan) => {
     }
 }
 
-export const updateAlokasiPagu = async(unit, ADO, year, value) =>{
+export const updateAlokasiPagu = async(unit, subunit, ADO, year, value) =>{
     try{
-        const updatedPagu = await PaguModel.findOneAndUpdate({unit: unit, ADO: ADO, year: year}, {alokasi: value}, {new: true});
+        const updatedPagu = await PaguModel.findOneAndUpdate({unit: unit, subunit: subunit, ADO: ADO, year: year}, {alokasi: value}, {new: true});
         if (!updatedPagu) {
             throw {name: "paguNotFound", message: `Update pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak berhasil`};
         }
@@ -73,9 +77,9 @@ export const updateAlokasiPagu = async(unit, ADO, year, value) =>{
     }
 } 
 
-export const changePenggunaanPagu = async(unit, ADO, year, amount) =>{
+export const changePenggunaanPagu = async(unit, subunit, ADO, year, amount) =>{
     try{
-        const updatedPagu = await PaguModel.findOneAndUpdate({unit: unit, ADO: ADO, year: year}, {$inc: {penggunaan: amount}}, {new: true});
+        const updatedPagu = await PaguModel.findOneAndUpdate({unit: unit, subunit: subunit, ADO: ADO, year: year}, {$inc: {penggunaan: amount}}, {new: true});
         if (!updatedPagu) {
             throw {name: "paguNotFound", message: `Update pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak berhasil`};
         }
@@ -85,10 +89,10 @@ export const changePenggunaanPagu = async(unit, ADO, year, amount) =>{
     }
 } 
 
-export const getAlokasiPagu = async(unit, ADO, year) => {
+export const getAlokasiPagu = async(unit, subunit, ADO, year) => {
     try{
         console.log(year);
-        const queryPagu = await PaguModel.findOne({unit: unit, ADO: ADO, year: year});
+        const queryPagu = await PaguModel.findOne({unit: unit, subunit: subunit, ADO: ADO, year: year});
         console.log(queryPagu)
         if (!queryPagu) {
             throw {name: "paguNotFound", message: `Alokasi Pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak ditemukan`};
@@ -99,9 +103,9 @@ export const getAlokasiPagu = async(unit, ADO, year) => {
     }
 }
 
-export const getPenggunaanPagu = async(unit, ADO, year) => {
+export const getPenggunaanPagu = async(unit, subunit, ADO, year) => {
     try{
-        const queryPagu = await PaguModel.findOne({unit: unit, ADO: ADO, year: year});
+        const queryPagu = await PaguModel.findOne({unit: unit, subunit: subunit, ADO: ADO, year: year});
         if (!queryPagu) {
             throw {name: "paguNotFound", message: `Penggunaan Pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak ditemukan`};
         }
@@ -111,9 +115,9 @@ export const getPenggunaanPagu = async(unit, ADO, year) => {
     }
 }
 
-export const getSisaPagu = async(unit, ADO, year) => {
+export const getSisaPagu = async(unit, subunit, ADO, year) => {
     try{
-        const queryPagu = await PaguModel.findOne({unit: unit, ADO: ADO, year: year});
+        const queryPagu = await PaguModel.findOne({unit: unit, subunit: subunit, ADO: ADO, year: year});
         if (!queryPagu) {
             throw {name: "paguNotFound", message: `Sisa Pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak ditemukan`};
         }

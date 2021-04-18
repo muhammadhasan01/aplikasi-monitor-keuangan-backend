@@ -15,7 +15,12 @@ export const getAllPagu = async (req, res) => {
 
 export const getPagu = async (req, res) => {
     try {
-        const pagu = await Pagu.getPagu(req.params.unit, req.params.ado, req.params.year);
+        var unit = req.params.unit;
+        var subunit = req.params.subunit;
+        var ado = req.params.ado;
+        var year = req.params.year;
+
+        const pagu = await Pagu.getPagu(unit, subunit, ado , year);
         return res.status(200).send(pagu);
     } catch (err) {
         if (err.name === "paguNotFound")
@@ -27,8 +32,8 @@ export const getPagu = async (req, res) => {
 };
 
 export const insertNewPagu = async (req, res) => {
-    const {unit, ADO, year, alokasi, penggunaan} = req.body;
-    if (!unit|| !ADO || !year || !alokasi || !penggunaan) {
+    const {unit, sub_unit, ADO, year, alokasi, penggunaan} = req.body;
+    if (!unit|| sub_unit || !ADO || !year || !alokasi || !penggunaan) {
         return res.status(400).send({
             message: "required field cannot be empty"
         });
@@ -47,7 +52,12 @@ export const insertNewPagu = async (req, res) => {
 
 export const getAlokasiPagu = async (req, res) => {
     try {
-        const alokasi = await Pagu.getAlokasiPagu(req.params.unit, req.params.ado, req.params.year);
+        var unit = req.params.unit;
+        var subunit = req.params.subunit;
+        var ado = req.params.ado;
+        var year = req.params.year;
+
+        const alokasi = await Pagu.getAlokasiPagu(unit, subunit, ado , year);
         return res.status(200).send({value: alokasi});
     } catch (err) {
         if (err.name === "paguNotFound")
@@ -60,7 +70,12 @@ export const getAlokasiPagu = async (req, res) => {
 
 export const getPenggunaanPagu = async (req, res) => {
     try {
-        const penggunaan = await Pagu.getPenggunaanPagu(req.params.unit, req.params.ado, req.params.year);
+        var unit = req.params.unit;
+        var subunit = req.params.subunit;
+        var ado = req.params.ado;
+        var year = req.params.year;
+
+        const penggunaan = await Pagu.getPenggunaanPagu(unit, subunit, ado , year);
         return res.status(200).send({value: penggunaan});
     } catch (err) {
         if (err.name === "paguNotFound")
@@ -73,7 +88,12 @@ export const getPenggunaanPagu = async (req, res) => {
 
 export const getSisaPagu = async (req, res) => {
     try {
-        const sisa = await Pagu.getSisaPagu(req.params.unit, req.params.ado, req.params.year);
+        var unit = req.params.unit;
+        var subunit = req.params.subunit;
+        var ado = req.params.ado;
+        var year = req.params.year;
+
+        const sisa = await Pagu.getSisaPagu(unit, subunit, ado , year);
         return res.status(200).send({value: sisa});
     } catch (err) {
         if (err.name === "paguNotFound")
