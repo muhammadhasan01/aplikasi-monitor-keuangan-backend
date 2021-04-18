@@ -110,8 +110,8 @@ export const createRKA = async (req, res) => {
             });
         }
 
-        const alokasi_ado = await pagu.getAlokasiPagu(unit, ADO, year);
-        const penggunaan_ado = await pagu.getPenggunaanPagu(unit, ADO, year);
+        const alokasi_ado = await pagu.getAlokasiPagu(unit, sub_unit, ADO, year);
+        const penggunaan_ado = await pagu.getPenggunaanPagu(unit, sub_unit, ADO, year);
         const alokasi_RKA = rancangan.januari + rancangan.februari + rancangan.maret + rancangan.april + rancangan.mei + rancangan.juni + rancangan.juli + rancangan.agustus + rancangan.september + rancangan.oktober + rancangan.november + rancangan.desember;
 
         if ((alokasi_RKA + penggunaan_ado) > alokasi_ado) {
@@ -121,7 +121,7 @@ export const createRKA = async (req, res) => {
         }
 
         const newRKA = await RKA.createRKA(unit, sub_unit, req.body, penggunaanAwal, alokasi_RKA, 0);
-        const newPagu = await pagu.changePenggunaanPagu(unit, ADO, year, alokasi_RKA);
+        const newPagu = await pagu.changePenggunaanPagu(unit, sub_unit, ADO, year, alokasi_RKA);
         
         console.log(newPagu);
         return res.status(201).send(newRKA);
@@ -143,7 +143,7 @@ export const deleteRKA = async (req, res) => {
         const total_rancangan = rka.total_rancangan;
 
         const deletedRKA = await RKA.deleteRKA(unit, sub_unit, rincian_belanja);
-        const newPagu = await pagu.changePenggunaanPagu(unit, ADO, year, -total_rancangan);
+        const newPagu = await pagu.changePenggunaanPagu(unit, sub_unit, ADO, year, -total_rancangan);
 
         return res.status(200).send(deletedRKA);
     } catch (err) {
