@@ -14,7 +14,6 @@ export const getUnits = async (req, res) => {
 
 export const getDistinctUnits = async (req, res) => {
     try {
-        console.log("Masuk controller");
         const units = await Units.getDistinctUnits();
         return res.status(200).send(units);
     } catch (err) {
