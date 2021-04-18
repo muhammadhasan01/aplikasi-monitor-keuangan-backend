@@ -52,8 +52,13 @@ export const getPenggunaanRKA = async (req, res) => {
 
 export const getRKAUnit = async (req, res) => {
     try {
-        unit = req.params.unit;
-        subunit = req.params.subunit;
+        console.log("Masuk controller");
+
+        var unit = req.params.unit;
+        var subunit = req.params.subunit;
+
+        console.log(unit);
+        console.log(subunit);
         const rka = await RKA.getRKAUnit(req.params.unit, req.params.subunit);
         return res.status(200).send(rka);
     } catch (err) {
@@ -84,6 +89,7 @@ export const createRKA = async (req, res) => {
         };
 
         const {year, ADO, kegiatan, subkegiatan, rincian_subkegiatan, rincian_belanja, jenis_belanja, satuan, volume, rancangan} = req.body;
+        
         const unit = req.params.unit;
         const sub_unit = req.params.subunit; 
 

@@ -192,11 +192,12 @@ export const getPenggunaanRKA = async(unit, subunit, rincian) => {
 
 export const getRKAUnit = async(unit, subunit) => {
     try{
+        console.log(unit, subunit);
         const queryRKA = await RKAModel.find({unit: unit, sub_unit: subunit});
         if (!queryRKA) {
             throw {name: "RKANotFound", message: `RKA ${unit} subunit ${unit} tidak ditemukan`};
         }
-        return queryRKA.penggunaan;
+        return queryRKA;
     } catch (err) {
         throw err;
     }
