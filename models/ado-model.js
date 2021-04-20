@@ -22,3 +22,12 @@ export const getDistinctADOs = async () => {
     }
 }
 
+export const createADO = async ({ name, detail }) => {
+    const newADO = new ADO({ name, detail });
+    try {
+        const ADOCreated = await newADO.save();
+        return ADOCreated;
+    } catch (err) {
+        throw err;
+    }
+}
