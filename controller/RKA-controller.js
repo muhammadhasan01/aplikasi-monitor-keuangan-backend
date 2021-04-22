@@ -24,9 +24,9 @@ export const getPenggunaan = async (req, res) => {
 
 export const getRKA = async (req, res) => {
     try {
-        var unit = req.params.unit;
-        var subunit = req.params.subunit;
-        var rincian = req.params.rincian;
+        let unit = req.params.unit;
+        let subunit = req.params.subunit;
+        let rincian = req.params.rincian;
 
         const rka = await RKA.getRKA(unit, subunit, rincian);
         return res.status(200).send(rka);
@@ -41,9 +41,9 @@ export const getRKA = async (req, res) => {
 
 export const getPenggunaanRKA = async (req, res) => {
     try {
-        var unit = req.params.unit;
-        var subunit = req.params.subunit;
-        var rincian = req.params.rincian;
+        let unit = req.params.unit;
+        let subunit = req.params.subunit;
+        let rincian = req.params.rincian;
 
         const rka = await RKA.getPenggunaanRKA(unit, subunit, rincian);
         return res.status(200).send(rka);
@@ -58,8 +58,8 @@ export const getPenggunaanRKA = async (req, res) => {
 
 export const getRKAUnit = async (req, res) => {
     try {
-        var unit = req.params.unit;
-        var subunit = req.params.subunit;
+        let unit = req.params.unit;
+        let subunit = req.params.subunit;
 
         const rka = await RKA.getRKAUnit(unit, subunit);
         return res.status(200).send(rka);
@@ -72,6 +72,19 @@ export const getRKAUnit = async (req, res) => {
     }
 };
 
+export const getRKAUnitADO = async (req, res) => {
+    try {
+        const { unit, subunit, ADO } = req.params;
+        const rka = await RKA.getRKAUnitADO(unit, subunit, ADO);
+        return res.status(200).send(rka);
+    } catch (err) {
+        if (err.name === "RKANotFound")
+            return res.status(404).send({
+                message: err.message
+            });
+        return res.status(500).send(err);
+    }
+};
 
 export const createRKA = async (req, res) => {
     try {
@@ -104,7 +117,7 @@ export const createRKA = async (req, res) => {
 
         //Check if there is duplicate RKA
         const RKAExist = await RKA.isRKAExist(unit, sub_unit, rincian_belanja);
-        if(RKAExist){
+        if (RKAExist){
             return res.status(400).send({
                 message: "There are duplicate records"
             });
@@ -175,7 +188,7 @@ export const inputPengeluaran = async (req, res) => {
         const total_penggunaan = rka.total_penggunaan;
         const total_rancangan = rka.total_rancangan;
 
-        if(total_penggunaan + amount > total_rancangan){
+        if (total_penggunaan + amount > total_rancangan) {
             return res.status(400).send({
                 message: "insufficient funds"
             });
@@ -186,7 +199,7 @@ export const inputPengeluaran = async (req, res) => {
 
         console.log(updatedRKA);
 
-        
+
         return res.status(200).send(rka);
     } catch (err) {
         if (err.name === "paguNotFound")

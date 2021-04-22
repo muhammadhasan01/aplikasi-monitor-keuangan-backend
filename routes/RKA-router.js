@@ -6,6 +6,7 @@ const router = express.Router();
 router.get('', RKA.getAllRKA);
 router.get('/s', RKA.getPenggunaan);
 router.get('/:unit/:subunit', RKA.getRKAUnit);
+router.get(`/:unit/:subunit/ADO/:ADO`, RKA.getRKAUnitADO);
 router.get('/:unit/:subunit/:rincian', RKA.getRKA);
 router.get('/:unit/:subunit/:rincian/s', RKA.getPenggunaanRKA);
 
