@@ -58,16 +58,16 @@ export const getPagu = async(unit, subunit, ado, year) => {
 export const insertNewPagu = async({unit, subunit, ADO, year, alokasi, penggunaan}) => {
     const newPagu = new PaguModel({unit, subunit, ADO, year, alokasi, penggunaan})
     try{
-        paguCreated = await newPagu.save();
+        const paguCreated = await newPagu.save();
         return paguCreated;
     } catch (err) {
         throw err;
     }
 }
 
-export const updateAlokasiPagu = async(unit, subunit, ADO, year, value) =>{
+export const updateAlokasiPagu = async(unit, subunit, ADO, year, alokasi) =>{
     try{
-        const updatedPagu = await PaguModel.findOneAndUpdate({unit: unit, subunit: subunit, ADO: ADO, year: year}, {alokasi: value}, {new: true});
+        const updatedPagu = await PaguModel.findOneAndUpdate({unit: unit, subunit: subunit, ADO: ADO, year: year}, {alokasi: alokasi}, {new: true});
         if (!updatedPagu) {
             throw {name: "paguNotFound", message: `Update pagu anggaran ${ADO} untuk ${unit} tahun ${year} tidak berhasil`};
         }

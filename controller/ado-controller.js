@@ -33,14 +33,12 @@ export const createADO = async (req, res) => {
             const unit = units[index];
             let data = {
                 unit: unit.unit,
-                sub_unit: unit.sub_unit,
+                subunit: unit.subunit,
                 ADO: newADO.name,
                 year: currentYear(),
                 alokasi: 0,
                 penggunaan: 0
             }
-            console.log(unit.unit);
-            console.log(unit.subunit);
             try {
                 const pagu = await Pagu.insertNewPagu(data);
             } catch (err) {
