@@ -31,7 +31,6 @@ export const getUnits = async () => {
 
 export const getDistinctUnits = async () => {
     try {
-        console.log("MasukModel");
         const units = await UnitsModel.distinct("unit");
         return units;
     } catch (err) {
