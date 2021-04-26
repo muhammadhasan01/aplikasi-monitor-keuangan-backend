@@ -166,7 +166,7 @@ export const getRKA = async(unit, subunit, rincian) => {
 
 export const isRKAExist = async(unit, subunit, rincian) => {
     try{
-        const queryRKA = await RKAModel.findOne({unit: unit, sub_unit: subunit, rincian_belanja: rincian});
+        const queryRKA = await RKAModel.findOne({ unit: unit, sub_unit: subunit, rincian_belanja: rincian });
         if (!queryRKA) {
             return false;
         }
@@ -233,84 +233,9 @@ export const deleteRKA = async (unit, sub_unit, rincian_belanja) => {
 
 export const inputPengeluaran = async (unit, sub_unit, rincian_belanja, amount, bulan) => {
     try {
-        var updatedRKA;
-       
-        switch (bulan) {
-            case "januari":
-                updatedRKA = await RKAModel.findOneAndUpdate(
-                    { unit: unit, sub_unit: sub_unit, rincian_belanja: rincian_belanja }, 
-                    {$inc: {total_penggunaan: amount, 'penggunaan.januari': amount} }, 
-                    {new: true});
-                break;
-            case "februari":
-                updatedRKA = await RKAModel.findOneAndUpdate(
-                    { unit: unit, sub_unit: sub_unit, rincian_belanja: rincian_belanja }, 
-                    {$inc: {total_penggunaan: amount, 'penggunaan.februari': amount} }, 
-                    {new: true});
-                break;
-            case "maret":
-                updatedRKA = await RKAModel.findOneAndUpdate(
-                    { unit: unit, sub_unit: sub_unit, rincian_belanja: rincian_belanja }, 
-                    {$inc: {total_penggunaan: amount, 'penggunaan.maret': amount} }, 
-                    {new: true});
-                break;
-            case "april":
-                updatedRKA = await RKAModel.findOneAndUpdate(
-                    { unit: unit, sub_unit: sub_unit, rincian_belanja: rincian_belanja }, 
-                    {$inc: {total_penggunaan: amount, 'penggunaan.april': amount} }, 
-                    {new: true});
-                break;
-            case "mei":
-                updatedRKA = await RKAModel.findOneAndUpdate(
-                    { unit: unit, sub_unit: sub_unit, rincian_belanja: rincian_belanja }, 
-                    {$inc: {total_penggunaan: amount, 'penggunaan.mei': amount} }, 
-                    {new: true});
-                break;
-            case "juni":
-                updatedRKA = await RKAModel.findOneAndUpdate(
-                    { unit: unit, sub_unit: sub_unit, rincian_belanja: rincian_belanja }, 
-                    {$inc: {total_penggunaan: amount, 'penggunaan.juni': amount} }, 
-                    {new: true});
-                break;
-            case "juli":
-                updatedRKA = await RKAModel.findOneAndUpdate(
-                    { unit: unit, sub_unit: sub_unit, rincian_belanja: rincian_belanja }, 
-                    {$inc: {total_penggunaan: amount, 'penggunaan.juli': amount} }, 
-                    {new: true});
-                break;
-            case "agustus":
-                updatedRKA = await RKAModel.findOneAndUpdate(
-                    { unit: unit, sub_unit: sub_unit, rincian_belanja: rincian_belanja }, 
-                    {$inc: {total_penggunaan: amount, 'penggunaan.agustus': amount} }, 
-                    {new: true});
-                break;
-            case "september":
-                updatedRKA = await RKAModel.findOneAndUpdate(
-                    { unit: unit, sub_unit: sub_unit, rincian_belanja: rincian_belanja }, 
-                    {$inc: {total_penggunaan: amount, 'penggunaan.september': amount} }, 
-                    {new: true});
-                break;
-            case "oktober":
-                updatedRKA = await RKAModel.findOneAndUpdate(
-                    { unit: unit, sub_unit: sub_unit, rincian_belanja: rincian_belanja }, 
-                    {$inc: {total_penggunaan: amount, 'penggunaan.oktober': amount} }, 
-                    {new: true});
-                break;
-            case "november":
-                updatedRKA = await RKAModel.findOneAndUpdate(
-                    { unit: unit, sub_unit: sub_unit, rincian_belanja: rincian_belanja }, 
-                    {$inc: {total_penggunaan: amount, 'penggunaan.november': amount} }, 
-                    {new: true});
-                break;
-            case "desember":
-                updatedRKA = await RKAModel.findOneAndUpdate(
-                    { unit: unit, sub_unit: sub_unit, rincian_belanja: rincian_belanja }, 
-                    {$inc: {total_penggunaan: amount, 'penggunaan.desember': amount} }, 
-                    {new: true});
-          }
-
-        return updatedRKA
-        
+        const RKA = await RKAModel.findOne({ unit: unit, sub_unit: sub_unit, rincian_belanja: rincian_belanja });
+        RKA.penggunaan[bulan] += amount;
+        return await RKAModel.findOneAndUpdate({ _id: RKA.id}, {$set: RKA });
     } catch (err) {
         throw err;
     }

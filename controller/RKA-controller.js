@@ -169,38 +169,19 @@ export const deleteRKA = async (req, res) => {
     }
 }
 
-//Input Pengeluaran
 export const inputPengeluaran = async (req, res) => {
     try {
         const unit = req.params.unit;
         const sub_unit = req.params.subunit; 
-        const {rincian_belanja, amount, bulan} = req.body;
-
+        const { rincian_belanja, amount, bulan } = req.body;
         const RKAExist = await RKA.isRKAExist(unit, sub_unit, rincian_belanja);
-        if(!RKAExist){
+        if (!RKAExist) {
             return res.status(400).send({
                 message: "RKA cannot be found"
             });
         }
-
-        const rka = await RKA.getRKA(unit, sub_unit, rincian_belanja);
-
-        const total_penggunaan = rka.total_penggunaan;
-        const total_rancangan = rka.total_rancangan;
-
-        if (total_penggunaan + amount > total_rancangan) {
-            return res.status(400).send({
-                message: "insufficient funds"
-            });
-        }
-
-        //TODO Gimana cara ngemap bulan sekarang buat nambahin penggunaan bulan ini sejumlah amount
         const updatedRKA = await RKA.inputPengeluaran(unit, sub_unit, rincian_belanja, amount, bulan);
-
-        console.log(updatedRKA);
-
-
-        return res.status(200).send(rka);
+        return res.status(200).send(updatedRKA);
     } catch (err) {
         if (err.name === "paguNotFound")
             return res.status(404).send({
