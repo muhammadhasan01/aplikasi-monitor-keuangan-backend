@@ -50,6 +50,30 @@ export const insertNewPagu = async (req, res) => {
     }
 };
 
+export const updateAlokasiPagu = async (req, res) => {
+    try {
+        const unit = req.params.unit;
+        const subunit = req.params.subunit;
+        const ADO = req.params.ado;
+        const year = req.params.year;
+
+        const {alokasi} = req.body;
+        if (!unit || !subunit || !ADO || !year || !alokasi) {
+            return res.status(400).send({
+                message: "required field cannot be empty"
+            });
+        }
+        const updatedPagu = await Pagu.updateAlokasiPagu(unit, subunit, ADO, year, alokasi);
+        return res.status(200).send(updatedPagu);
+    } catch (err) {
+        if (err.name === "paguNotFound")
+            return res.status(404).send({
+                message: err.message
+            });
+        return res.status(500).send(err);
+    }
+}
+
 export const getAlokasiPagu = async (req, res) => {
     try {
         var unit = req.params.unit;
