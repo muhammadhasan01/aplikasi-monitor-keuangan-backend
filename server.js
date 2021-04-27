@@ -8,6 +8,7 @@ import paguRouter from './routes/pagu-router.js'
 import RKARouter from './routes/RKA-router.js'
 import authsRouter from './routes/auth-router.js';
 import adoRouter from './routes/ado-router.js';
+import pengeluaranRouter from './routes/pengeluaran-router.js';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use('/auths', authsRouter);
 app.use('/pagu', paguRouter);
 app.use('/rka', RKARouter);
 app.use('/ado', adoRouter);
+app.use('/pengeluaran', pengeluaranRouter);
 
 try {
     mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true, useFindAndModify: false })
