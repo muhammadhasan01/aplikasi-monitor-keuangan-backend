@@ -5,7 +5,6 @@ const router = express.Router();
 
 export const getAllPagu = async (req, res) => {
     try {
-        console.log("Masuk Controller");
         const allPagu = await Pagu.getAllPagu();
         return res.status(200).send(allPagu);
     } catch (err) {
