@@ -180,7 +180,7 @@ export const inputPengeluaran = async (req, res) => {
                 message: "RKA cannot be found"
             });
         }
-        const updatedRKA = await RKA.inputPengeluaran(unit, sub_unit, rincian_belanja, amount, bulan);
+        const updatedRKA = await RKA.inputPengeluaran(RKAExist._id, amount, bulan);
         return res.status(200).send(updatedRKA);
     } catch (err) {
         if (err.name === "paguNotFound")

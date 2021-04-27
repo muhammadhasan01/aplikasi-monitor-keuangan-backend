@@ -170,7 +170,7 @@ export const isRKAExist = async(unit, subunit, rincian) => {
         if (!queryRKA) {
             return false;
         }
-        return true;
+        return queryRKA;
     } catch (err) {
         throw err;
     }
@@ -231,11 +231,13 @@ export const deleteRKA = async (unit, sub_unit, rincian_belanja) => {
     }
 }
 
-export const inputPengeluaran = async (unit, sub_unit, rincian_belanja, amount, bulan) => {
+export const inputPengeluaran = async (id, amount, bulan) => {
     try {
-        const RKA = await RKAModel.findOne({ unit: unit, sub_unit: sub_unit, rincian_belanja: rincian_belanja });
-        RKA.penggunaan[bulan] += amount;
-        return await RKAModel.findOneAndUpdate({ _id: RKA.id}, {$set: RKA });
+        const RKA = await RKAModel.findById(id);
+        const { penggunaan } = RKA;
+        penggunaan[bulan] += amount;
+        const updatedRKA = await RKAModel.findByIdAndUpdate(id, {$set: { penggunaan: penggunaan } }, { multi: true });
+        return await RKAModel.findById(id);
     } catch (err) {
         throw err;
     }
