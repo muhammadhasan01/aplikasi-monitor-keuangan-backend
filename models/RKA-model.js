@@ -53,7 +53,7 @@ const pengeluaranBulanan = Schema({
 
 });
 
-const RKASchema = Schema({
+export const RKASchema = Schema({
     year: {
         type: Number,
         required: true,
@@ -119,12 +119,11 @@ const RKASchema = Schema({
     timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" },
 });
 
-const RKAModel = mongoose.model('rka', RKASchema);
+export const RKAModel = mongoose.model('rka', RKASchema);
 
 export const getAllRKA = async () => {
     try {
         const RKA = await RKAModel.find();
-        console.log(RKA)
         return RKA;
     } catch (err) {
         throw err;
@@ -134,8 +133,6 @@ export const getAllRKA = async () => {
 export const getRancangan = async () => {
     try {
         const RKA = await RKAModel.find();
-        console.log(RKA[0].rancangan.februari)
-        console.log(RKA[0])
         return RKA[0].rancangan;
     } catch (err) {
         throw err;
@@ -230,18 +227,4 @@ export const deleteRKA = async (unit, sub_unit, rincian_belanja) => {
         throw err;
     }
 }
-
-export const inputPengeluaran = async (id, amount, bulan) => {
-    try {
-        const RKA = await RKAModel.findById(id);
-        const { penggunaan } = RKA;
-        penggunaan[bulan] += amount;
-        const updatedRKA = await RKAModel.findByIdAndUpdate(id, {$set: { penggunaan: penggunaan } }, { multi: true });
-        return await RKAModel.findById(id);
-    } catch (err) {
-        throw err;
-    }
-}
-
-
 
