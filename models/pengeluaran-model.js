@@ -3,10 +3,6 @@ import { RKASchema, RKAModel } from "./RKA-model.js";
 let Schema = mongoose.Schema;
 
 const pengeluaranSchema = Schema({
-    tanggal: {
-        type: Date,
-        default: Date.now()
-    },
     jumlah: {
         type: Number,
         default: 0,
@@ -14,13 +10,15 @@ const pengeluaranSchema = Schema({
     RKA: {
         type: RKASchema
     }
+}, {
+    timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" },
 });
 
 const PengeluaranModel = mongoose.model('pengeluaran', pengeluaranSchema);
 
 export const getAllPengeluaran = async () => {
     try {
-        return await PengeluaranModel.find();
+        return await PengeluaranModel.find().sort({ _id: -1 });
     } catch (err) {
         throw err;
     }
