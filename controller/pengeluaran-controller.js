@@ -20,6 +20,21 @@ export const getPengeluaran = async (req, res) => {
     }
 }
 
+export const getPengeluaranUnit = async (req, res) => {
+    try {
+        const { unit } = req.params;
+        if (!unit) {
+            return res.status(400).send({
+                message: "required field cannot be empty"
+            });
+        }
+        const pengeluaran = Pengeluaran.getAllPengeluaranUnit(unit);
+        return res.status(200).send(pengeluaran);
+    } catch (err) {
+        return res.status(500).send(err);
+    }
+}
+
 export const updatePengeluaran = async (req, res) => {
     try {
         const { id } = req.params;
