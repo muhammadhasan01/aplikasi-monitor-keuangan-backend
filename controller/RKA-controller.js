@@ -1,8 +1,5 @@
-import express from 'express';
 import * as RKA from '../models/RKA-model.js';
 import * as pagu from '../models/pagu-model.js';
-
-const router = express.Router();
 
 export const getAllRKA = async (req, res) => {
     try {
@@ -135,8 +132,7 @@ export const createRKA = async (req, res) => {
 
         const newRKA = await RKA.createRKA(unit, sub_unit, req.body, penggunaanAwal, alokasi_RKA, 0);
         const newPagu = await pagu.changePenggunaanPagu(unit, sub_unit, ADO, year, alokasi_RKA);
-        
-        console.log(newPagu);
+
         return res.status(201).send(newRKA);
     } catch (err) {
         if(err.name === "paguNotFound"){
@@ -171,27 +167,3 @@ export const deleteRKA = async (req, res) => {
         return res.status(500).send(err);
     }
 }
-
-export const inputPengeluaran = async (req, res) => {
-    try {
-        const unit = req.params.unit;
-        const sub_unit = req.params.subunit; 
-        const { rincian_belanja, amount, bulan } = req.body;
-        const RKAExist = await RKA.isRKAExist(unit, sub_unit, rincian_belanja);
-        if (!RKAExist) {
-            return res.status(400).send({
-                message: "RKA cannot be found"
-            });
-        }
-        const updatedRKA = await RKA.inputPengeluaran(RKAExist._id, amount, bulan);
-        return res.status(200).send(updatedRKA);
-    } catch (err) {
-        if (err.name === "paguNotFound")
-            return res.status(404).send({
-                message: err.message
-            });
-        return res.status(500).send(err);
-    }
-};
-
-export default router

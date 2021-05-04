@@ -15,6 +15,4 @@ router.post('/:unit/:subunit', RKA.createRKA);
 
 router.delete('/:unit/:subunit', RKA.deleteRKA);
 
-router.put('/:unit/:subunit', RKA.inputPengeluaran);
-
 export default router;
