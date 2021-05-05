@@ -135,6 +135,9 @@ export const createRKA = async (req, res) => {
 
         return res.status(201).send(newRKA);
     } catch (err) {
+        if(err.name === "paguNotFound"){
+            return res.status(404).send(err);
+        };
         return res.status(500).send(err);
     }
 };

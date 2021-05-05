@@ -30,7 +30,7 @@ export const getAllPengeluaran = async () => {
 
 export const getAllPengeluaranUnit = async (unit) => {
     try {
-        const pengeluaran = PengeluaranModel.find().sort({ _id: -1 });
+        const pengeluaran = PengeluaranModel.find({ unit: unit }).sort({ _id: -1 });
         return pengeluaran;
     } catch (err) {
         throw err;
@@ -77,6 +77,7 @@ export const inputPengeluaran = async (id, amount, bulan) => {
         throw err;
     }
 }
+
 
 export const undoPengeluaran = async (id) => {
     try {
