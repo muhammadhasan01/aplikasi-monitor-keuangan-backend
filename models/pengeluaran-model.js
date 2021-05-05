@@ -7,6 +7,10 @@ const pengeluaranSchema = Schema({
         type: Number,
         default: 0,
     },
+    bulan: {
+        type: String,
+        trim: true
+    },
     RKA: {
         type: RKASchema
     }
@@ -66,9 +70,26 @@ export const inputPengeluaran = async (id, amount, bulan) => {
         await RKAModel.findByIdAndUpdate(id, {$set: { penggunaan: penggunaan } }, { multi: true });
         const updatedRKA = await RKAModel.findById(id);
         // Update Riwayat Input Pengeluaran
-        const pengeluaran = new PengeluaranModel({ jumlah: amount, RKA: updatedRKA });
+        const pengeluaran = new PengeluaranModel({ jumlah: amount, RKA: updatedRKA, bulan });
         await pengeluaran.save();
         return updatedRKA;
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const undoPengeluaran = async (id) => {
+    try {
+        const pengeluaran = await PengeluaranModel.findById(id);
+        const { RKA: { _id }, bulan, jumlah } = pengeluaran;
+        const RKA = await RKAModel.findById(_id);
+        const { penggunaan } = RKA;
+        penggunaan[bulan] -= jumlah;
+        // Update RKA
+        await RKAModel.findByIdAndUpdate(_id, {$set: { penggunaan: penggunaan } }, { multi: true });
+        // Remove data pengeluaran
+        await removePengeluaran(id);
+        return true;
     } catch (err) {
         throw err;
     }

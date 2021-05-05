@@ -61,10 +61,6 @@ export const createUnit = async (req, res) => {
     try {
         const {unit, code, subunit} = req.body;
 
-        console.log(unit);
-        console.log(code);
-        console.log(subunit);
-
         if (!unit || !code || !subunit) {
             return res.status(400).send({
                 message: "required field cannot be empty"
@@ -75,7 +71,6 @@ export const createUnit = async (req, res) => {
 
         if(UnitExist)
         {
-            console.log("Ada unitnya");
             return res.status(400).send({
                 message: "there are duplicate units"
             });

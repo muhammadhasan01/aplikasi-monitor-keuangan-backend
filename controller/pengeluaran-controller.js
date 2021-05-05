@@ -64,7 +64,6 @@ export const removePengeluaran = async (req, res) => {
 export const inputPengeluaran = async (req, res) => {
     try {
         const { unit, sub_unit, rincian_belanja, amount, bulan } = req.body;
-        console.log(req.body);
         if (!unit || !sub_unit || !rincian_belanja || !amount || !bulan) {
             return res.status(400).send({
                 message: "required field cannot be empty"
@@ -86,3 +85,13 @@ export const inputPengeluaran = async (req, res) => {
         return res.status(500).send(err);
     }
 };
+
+export const undoPengeluaran = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const resp = Pengeluaran.undoPengeluaran(id);
+        return res.status(200).send(resp);
+    } catch (err) {
+        return res.status(500).send(err);
+    }
+}

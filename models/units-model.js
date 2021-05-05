@@ -69,9 +69,7 @@ export const createUnit = async ({ unit, code, subunit }) => {
 
 export const isUnitExist = async(unit, code, subunit) => {
     try{
-        console.log("Masuk model");
-        const queryUnit = await UnitsModel.findOne({unit: unit, code: code, subunit: subunit});
-        console.log(queryUnit);
+        const queryUnit = await UnitsModel.findOne({ unit: unit, code: code, subunit: subunit });
         if (!queryUnit) {
             return false;
         }
