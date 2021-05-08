@@ -75,8 +75,8 @@ export const inputPengeluaran = async (req, res) => {
                 message: "RKA cannot be found"
             });
         }
-        const updatedRKA = await Pengeluaran.inputPengeluaran(RKAExist._id, amount, bulan);
-        return res.status(200).send(updatedRKA);
+        const pengeluaran = await Pengeluaran.inputPengeluaran(RKAExist._id, amount, bulan);
+        return res.status(200).send(pengeluaran);
     } catch (err) {
         if (err.name === "paguNotFound")
             return res.status(404).send({

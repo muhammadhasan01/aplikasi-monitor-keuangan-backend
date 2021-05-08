@@ -72,7 +72,7 @@ export const inputPengeluaran = async (id, amount, bulan) => {
         // Update Riwayat Input Pengeluaran
         const pengeluaran = new PengeluaranModel({ jumlah: amount, RKA: updatedRKA, bulan });
         await pengeluaran.save();
-        return updatedRKA;
+        return pengeluaran;
     } catch (err) {
         throw err;
     }
