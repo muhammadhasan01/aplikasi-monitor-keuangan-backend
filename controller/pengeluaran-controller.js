@@ -61,6 +61,15 @@ export const removePengeluaran = async (req, res) => {
     }
 }
 
+export const removeAllPengeluaran = async (req, res) => {
+    try {
+        const remove = await Pengeluaran.removeAllPengeluaran();
+        return res.status(200).send(remove);
+    } catch (err) {
+        return res.status(500).send(err);
+    }
+}
+
 export const inputPengeluaran = async (req, res) => {
     try {
         const { unit, sub_unit, rincian_belanja, amount, bulan } = req.body;

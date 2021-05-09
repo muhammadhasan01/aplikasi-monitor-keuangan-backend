@@ -53,6 +53,14 @@ export const removePengeluaran = async (id) => {
     }
 }
 
+export const removeAllPengeluaran = async () => {
+    try {
+        return await PengeluaranModel.remove();
+    } catch (err) {
+        throw err;
+    }
+}
+
 export const updatePengeluaran = async (id, amount) => {
     try {
         return await PengeluaranModel.findByIdAndUpdate(id, { $inc: { jumlah: amount } });
@@ -87,10 +95,10 @@ export const undoPengeluaran = async (id) => {
         const { penggunaan } = RKA;
         penggunaan[bulan] -= jumlah;
         // Update RKA
-        await RKAModel.findByIdAndUpdate(_id, {$set: { penggunaan: penggunaan } }, { multi: true });
+        await RKAModel.findByIdAndUpdate(_id, { $set: { penggunaan: penggunaan } }, { multi: true });
         // Remove data pengeluaran
-        await removePengeluaran(id);
-        return true;
+        const ret = await removePengeluaran(id);
+        return ret;
     } catch (err) {
         throw err;
     }

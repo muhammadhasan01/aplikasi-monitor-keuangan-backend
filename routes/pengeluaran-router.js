@@ -9,6 +9,7 @@ router.get('/unit/:unit', Pengeluaran.getPengeluaranUnit);
 router.get('/:id', Pengeluaran.getPengeluaran);
 router.put('/:id', Pengeluaran.updatePengeluaran);
 router.delete('/:id', Pengeluaran.removePengeluaran);
+router.delete('', Pengeluaran.removeAllPengeluaran);
 router.delete('/undo/:id', Pengeluaran.undoPengeluaran);
 
 export default router;
