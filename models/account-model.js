@@ -121,6 +121,15 @@ export const deleteAccount = async (id) => {
     }
 }
 
+export const changePassword = async (id, password) => {
+    try {
+        password = Bcrypt.hashSync(password, 10);
+        return await AccountModel.findByIdAndUpdate(id, { $set: { password: password } });
+    } catch (err) {
+        throw err;
+    }
+}
+
 export const checkPassword = async (username, password) => {
     const account = await AccountModel.findOne({ username: username }).select('password');
     return Bcrypt.compareSync(password, account.password);

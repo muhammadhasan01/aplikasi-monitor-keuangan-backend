@@ -1,8 +1,4 @@
-import express from 'express';
-import Bcrypt from 'bcryptjs';
 import * as Accounts from '../models/account-model.js';
-
-const router = express.Router();
 
 export const getAccounts = async (req, res) => {
     try {
@@ -86,4 +82,18 @@ export const deleteAccount = async (req, res) => {
     }
 }
 
-export default router
+export const changePassword = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { password } = req.body;
+        if (!password) {
+            return res.status(400).send({
+                message: "password field is required"
+            });
+        }
+        const ret = await Accounts.changePassword(id, password);
+        return res.status(200).send(ret);
+    } catch (err) {
+        return res.status(500).send(err);
+    }
+}
