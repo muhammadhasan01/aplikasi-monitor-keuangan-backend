@@ -16,6 +16,6 @@ export const getToken = (user) => {
             type: user.userType
         },
         JWT_SECRET,
-        { expiresIn: "3h" }
+        { expiresIn: "5h" }
     );
 }
