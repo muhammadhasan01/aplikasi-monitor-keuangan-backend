@@ -1,5 +1,8 @@
 import {getToken} from "../auth/jwt-token.js";
-import {AccountModel, checkPassword, getUsername} from "../models/account-model.js";
+import { AccountModel, checkPassword, getUsername } from "../models/account-model.js";
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const login = async (req, res) => {
     try {
@@ -31,14 +34,14 @@ export const login = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
     try {
-        const {username, newPassword, newPasswordConfirmation} = req.body;
-        if (newPassword != newPasswordConfirmation) {
+        const { username, newPassword, newPasswordConfirmation } = req.body;
+        if (newPassword !== newPasswordConfirmation) {
             return res.status(400).json({
                message: "Password doesn't match"
             });
         }
         else{
-            const user = getUsername(username);
+            const user = await getUsername(username);
             if (!user) {
                 return res.status(400).json({
                     message: "The given username was not found"
@@ -59,35 +62,34 @@ export const resetPassword = async (req, res) => {
 
 export const sendResetLink = async (req, res) => {
     try {
-        const {username} = req.body;
-        const user = getUsername(username);
-        var nodemailer = require('nodemailer');
-
-        var transporter = nodemailer.createTransport({
-          service: 'gmail',
+        const { username } = req.body;
+        console.log(username);
+        const user = await getUsername(username);
+        console.log("user", user);
+        const { EMAIL_FOR_RESET, EMAIL_SERVICE, PASSWORD_FOR_RESET } = process.env;
+        const SERVER_URL = process.env.SERVER_URL || 'http://localhost:3000';
+        const transporter = nodemailer.createTransport({
+          service: EMAIL_SERVICE,
           auth: {
-            user: 'steianggaran@gmail.com',
-            pass: 'Anggaran2021'
+            user: EMAIL_FOR_RESET,
+            pass: PASSWORD_FOR_RESET
           }
         });
-        
-        var mailOptions = {
-          from: 'steianggaran@gmail.com',
+        const tokenUsername = getToken(user);
+        const mailOptions = {
+          from: EMAIL_FOR_RESET,
           to: user.email,
-          subject: 'Reset Password Monitoring Anggaran STEI ',
-          text: 'To reset your password, please click on this link: http://localhost:3000/reset/'+username
+          subject: 'Reset Password Monitoring Anggaran STEI',
+          text: `To reset your password, please click on this link: ${SERVER_URL}/reset/` + tokenUsername
         };
-        
-        transporter.sendMail(mailOptions, function(error, info){
+        transporter.sendMail(mailOptions, function(error, info) {
           if (error) {
             console.log(error);
           } else {
             console.log('Email sent: ' + info.response);
           }
-        }); 
+        });
     } catch (err) {
         return res.status(500).send(err);
     }
 }
-
-

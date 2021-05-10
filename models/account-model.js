@@ -48,7 +48,7 @@ const accountSchema = Schema({
         trim: true,
         minlength: 5,
         selected: false,
-    },
+    }
 }, {
     strict: true,
     versionKey: false,
