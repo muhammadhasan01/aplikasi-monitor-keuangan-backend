@@ -1,7 +1,8 @@
-import {getToken} from "../auth/jwt-token.js";
+import { getToken } from "../auth/jwt-token.js";
 import { AccountModel, checkPassword, getUsername } from "../models/account-model.js";
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import Bcrypt from "bcryptjs";
 dotenv.config();
 
 export const login = async (req, res) => {
@@ -40,21 +41,16 @@ export const resetPassword = async (req, res) => {
                message: "Password doesn't match"
             });
         }
-        else{
-            const user = await getUsername(username);
-            if (!user) {
-                return res.status(400).json({
-                    message: "The given username was not found"
-                });
-            }
-            else{
-                user.password = newPassword
-                updateUser(user);
-            }
-            return res.status(200).json({
-                message: "Password has been successfully reset"
+        const user = await getUsername(username);
+        if (!user) {
+            return res.status(400).json({
+                message: "The given username was not found"
             });
         }
+        await AccountModel.findOneAndUpdate({ username }, { $set: { password: Bcrypt.hashSync(newPassword, 10) } })
+        return res.status(200).json({
+            message: "Password has been successfully reset"
+        });
     } catch (err) {
         return res.status(500).send(err);
     }
@@ -65,29 +61,40 @@ export const sendResetLink = async (req, res) => {
         const { username } = req.body;
         console.log(username);
         const user = await getUsername(username);
-        console.log("user", user);
+        const { email } = user;
+        console.log("user email", email);
         const { EMAIL_FOR_RESET, EMAIL_SERVICE, PASSWORD_FOR_RESET } = process.env;
         const SERVER_URL = process.env.SERVER_URL || 'http://localhost:3000';
         const transporter = nodemailer.createTransport({
-          service: EMAIL_SERVICE,
-          auth: {
-            user: EMAIL_FOR_RESET,
-            pass: PASSWORD_FOR_RESET
-          }
+            service: 'gmail',
+            port:465,
+            secure: true, // true for 465, false for other ports
+            logger: true,
+            debug: true,
+            secureConnection: false,
+            tls:{
+                rejectUnAuthorized:true
+            },
+            auth: {
+                user: EMAIL_FOR_RESET,
+                pass: PASSWORD_FOR_RESET
+            }
         });
         const tokenUsername = getToken(user);
         const mailOptions = {
           from: EMAIL_FOR_RESET,
-          to: user.email,
+          to: email,
           subject: 'Reset Password Monitoring Anggaran STEI',
-          text: `To reset your password, please click on this link: ${SERVER_URL}/reset/` + tokenUsername
+          text: `To reset your password, please click on this link: ${SERVER_URL}/reset/${tokenUsername} (will expire in 5 hours)`
         };
+        console.log("pretest passed", mailOptions);
         transporter.sendMail(mailOptions, function(error, info) {
-          if (error) {
-            console.log(error);
-          } else {
+            if (error) {
+                console.log(error);
+                return res.status(500).send(error);
+            }
             console.log('Email sent: ' + info.response);
-          }
+            return res.status(200).send(info.response);
         });
     } catch (err) {
         return res.status(500).send(err);
