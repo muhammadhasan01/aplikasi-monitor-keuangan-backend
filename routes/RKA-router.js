@@ -12,6 +12,7 @@ router.get('/:unit/:subunit/:rincian/s', RKA.getPenggunaanRKA);
 
 router.post('', RKA.createRKA);
 router.post('/:unit/:subunit', RKA.createRKA);
+router.post('/tambah/alokasi/:id', RKA.ambilAlokasiRKA);
 
 router.delete('/:unit/:subunit', RKA.deleteRKA);
 

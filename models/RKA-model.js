@@ -122,109 +122,79 @@ export const RKASchema = Schema({
 export const RKAModel = mongoose.model('rka', RKASchema);
 
 export const getAllRKA = async () => {
-    try {
-        const RKA = await RKAModel.find();
-        return RKA;
-    } catch (err) {
-        throw err;
-    }
+    return await RKAModel.find();
 }
 
 export const getRancangan = async () => {
-    try {
-        const RKA = await RKAModel.find();
-        return RKA[0].rancangan;
-    } catch (err) {
-        throw err;
-    }
+    const RKA = await RKAModel.find();
+    return RKA[0].rancangan;
 }
 
 export const getPenggunaan = async () => {
-    try {
-        const RKA = await RKAModel.find();
-        return RKA[0].penggunaan;
-    } catch (err) {
-        throw err;
-    }
+    const RKA = await RKAModel.find();
+    return RKA[0].penggunaan;
 }
 
 
 export const getRKA = async(unit, subunit, rincian) => {
-    try{
-        const queryRKA = await RKAModel.findOne({unit: unit, sub_unit: subunit, rincian_belanja: rincian});
-        if (!queryRKA) {
-            throw {name: "RKANotFound", message: `RKA ${unit} subunit ${unit} untuk ${rincian} tidak ditemukan`};
-        }
-        return queryRKA;
-    } catch (err) {
-        throw err;
+    const queryRKA = await RKAModel.findOne({unit: unit, sub_unit: subunit, rincian_belanja: rincian});
+    if (!queryRKA) {
+        throw {name: "RKANotFound", message: `RKA ${unit} subunit ${unit} untuk ${rincian} tidak ditemukan`};
     }
+    return queryRKA;
 }
 
 export const isRKAExist = async(unit, subunit, rincian) => {
-    try{
-        const queryRKA = await RKAModel.findOne({ unit: unit, sub_unit: subunit, rincian_belanja: rincian });
-        if (!queryRKA) {
-            return false;
-        }
-        return queryRKA;
-    } catch (err) {
-        throw err;
+    const queryRKA = await RKAModel.findOne({ unit: unit, sub_unit: subunit, rincian_belanja: rincian });
+    if (!queryRKA) {
+        return false;
     }
+    return queryRKA;
 }
 
 export const getPenggunaanRKA = async(unit, subunit, rincian) => {
-    try{
-        const queryRKA = await RKAModel.findOne({unit: unit, sub_unit: subunit, rincian_belanja: rincian});
-        if (!queryRKA) {
-            throw {name: "RKANotFound", message: `RKA ${unit} subunit ${unit} untuk ${rincian} tidak ditemukan`};
-        }
-        return queryRKA.penggunaan;
-    } catch (err) {
-        throw err;
+    const queryRKA = await RKAModel.findOne({unit: unit, sub_unit: subunit, rincian_belanja: rincian});
+    if (!queryRKA) {
+        throw {name: "RKANotFound", message: `RKA ${unit} subunit ${unit} untuk ${rincian} tidak ditemukan`};
     }
+    return queryRKA.penggunaan;
 }
 
 export const getRKAUnit = async(unit, subunit) => {
-    try{
-        const queryRKA = await RKAModel.find({unit: unit, sub_unit: subunit});
-        if (!queryRKA) {
-            throw {name: "RKANotFound", message: `RKA ${unit} subunit ${unit} tidak ditemukan`};
-        }
-        return queryRKA;
-    } catch (err) {
-        throw err;
+    const queryRKA = await RKAModel.find({unit: unit, sub_unit: subunit});
+    if (!queryRKA) {
+        throw {name: "RKANotFound", message: `RKA ${unit} subunit ${unit} tidak ditemukan`};
     }
+    return queryRKA;
 }
 
 export const getRKAUnitADO = async(unit, subunit, ADO) => {
-    try{
-        const queryRKA = await RKAModel.find({unit: unit, sub_unit: subunit, ADO: ADO});
-        if (!queryRKA) {
-            throw { name: "RKANotFound", message: `RKA ${unit} subunit ${unit} tidak ditemukan` };
-        }
-        return queryRKA;
-    } catch (err) {
-        throw err;
+    const queryRKA = await RKAModel.find({unit: unit, sub_unit: subunit, ADO: ADO});
+    if (!queryRKA) {
+        throw { name: "RKANotFound", message: `RKA ${unit} subunit ${unit} tidak ditemukan` };
     }
+    return queryRKA;
+}
+
+export const ambilAlokasiRKA = async (id, bulanDitambah, bulanDikurang, jumlah) => {
+    const RKA = await RKAModel.findById(id);
+    const { penggunaan, rancangan } = RKA;
+    const sisa = rancangan[bulanDikurang] - penggunaan[bulanDikurang];
+    if (jumlah > sisa || jumlah < 0) {
+        throw new Error("JUMLAH");
+    }
+    rancangan[bulanDikurang] -= jumlah;
+    rancangan[bulanDitambah] += jumlah;
+    await RKAModel.findByIdAndUpdate(id, {$set: { rancangan }});
+    return await RKAModel.findById(id);
 }
 
 export const createRKA = async (unit, sub_unit, { year, ADO, kegiatan, subkegiatan, rincian_subkegiatan, rincian_belanja, jenis_belanja, satuan, volume, rancangan}, penggunaan, total_rancangan, total_penggunaan) => {
     const newRKA = new RKAModel({ year, unit, sub_unit, ADO, kegiatan, subkegiatan, rincian_subkegiatan, rincian_belanja, jenis_belanja, satuan, volume, rancangan, penggunaan, total_rancangan, total_penggunaan});
-    try {
-        const rkaCreated = await newRKA.save();
-        return rkaCreated;
-    } catch (err) {
-        throw err;
-    }
+    return await newRKA.save();
 }
 
 export const deleteRKA = async (unit, sub_unit, rincian_belanja) => {
-    try {
-        const deletedRKA = await RKAModel.findOneAndRemove({ unit: unit, sub_unit: sub_unit, rincian_belanja: rincian_belanja });
-        return deletedRKA;
-    } catch (err) {
-        throw err;
-    }
+    return await RKAModel.findOneAndRemove({ unit: unit, sub_unit: sub_unit, rincian_belanja: rincian_belanja });
 }
 

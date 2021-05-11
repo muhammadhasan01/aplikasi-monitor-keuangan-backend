@@ -142,6 +142,27 @@ export const createRKA = async (req, res) => {
     }
 };
 
+export const ambilAlokasiRKA = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { bulanDitambah, bulanDikurang, jumlah } = req.body;
+        if (!bulanDitambah || !bulanDikurang || !jumlah) {
+            return res.status(400).send({
+               message: "Required field cannot be empty"
+            });
+        }
+        const response = await RKA.ambilAlokasiRKA(id, bulanDitambah, bulanDikurang, jumlah);
+        return res.status(200).send(response);
+    } catch (err) {
+        if (err.message === "JUMLAH") {
+            return res.status(400).send({
+                message: "Jumlah tidak boleh lebih dari sisa anggaran dan tidak boleh negatif"
+            });
+        }
+        console.log(500).send(err);
+    }
+}
+
 export const deleteRKA = async (req, res) => {
     try {
         const unit = req.params.unit;

@@ -59,10 +59,8 @@ export const resetPassword = async (req, res) => {
 export const sendResetLink = async (req, res) => {
     try {
         const { username } = req.body;
-        console.log(username);
         const user = await getUsername(username);
         const { email } = user;
-        console.log("user email", email);
         const { EMAIL_FOR_RESET, EMAIL_SERVICE, PASSWORD_FOR_RESET } = process.env;
         const SERVER_URL = process.env.SERVER_URL || 'http://localhost:3000';
         const transporter = nodemailer.createTransport({
@@ -82,12 +80,13 @@ export const sendResetLink = async (req, res) => {
         });
         const tokenUsername = getToken(user);
         const mailOptions = {
-          from: EMAIL_FOR_RESET,
-          to: email,
-          subject: 'Reset Password Monitoring Anggaran STEI',
-          text: `To reset your password, please click on this link: ${SERVER_URL}/reset/${tokenUsername} (will expire in 5 hours)`
+            from: EMAIL_FOR_RESET,
+            to: email,
+            subject: 'Reset Password Monitoring Anggaran STEI',
+            text: `Untuk melakukan pengulangan kata sandi gunakan link berikut: ${SERVER_URL}/reset/${tokenUsername} (akan hangus dalam 5 jam)`,
+            html: `Untuk melakukan pengulangan kata sandi gunakan link berikut <br /> <a>${SERVER_URL}/reset/${tokenUsername}</a>
+              (<b>Link akan hangus dalam 5 jam</b>`
         };
-        console.log("pretest passed", mailOptions);
         transporter.sendMail(mailOptions, function(error, info) {
             if (error) {
                 console.log(error);
