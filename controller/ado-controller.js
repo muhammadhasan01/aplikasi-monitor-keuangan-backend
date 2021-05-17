@@ -1,9 +1,6 @@
-import express from 'express';
 import * as Units from '../models/units-model.js';
 import * as Pagu from '../models/pagu-model.js';
 import * as ADO from '../models/ado-model.js';
-
-const router = express.Router();
 
 function currentYear() {
   return new Date().getFullYear();
@@ -56,4 +53,12 @@ export const createADO = async (req, res) => {
   }
 };
 
-export default router
+export const deleteADO = async (req, res) => {
+  try {
+    const {id} = req.params;
+    const response = ADO.deleteADO(id);
+    return res.status(200).send(response);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+}
