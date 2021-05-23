@@ -85,8 +85,8 @@ export const sendResetLink = async (req, res) => {
       to: email,
       subject: 'Reset Password Monitoring Anggaran STEI',
       text: `Untuk melakukan pengulangan kata sandi gunakan link berikut: ${SERVER_URL}/reset/${tokenUsername} (akan hangus dalam 5 jam)`,
-      html: `Untuk melakukan pengulangan kata sandi gunakan link berikut <br /> <a>${SERVER_URL}/reset/${tokenUsername}</a>
-              (<b>Link akan hangus dalam 5 jam</b>`
+      html: `Untuk melakukan pengulangan kata sandi gunakan link berikut: <br /> <a>${SERVER_URL}/reset/${tokenUsername}</a>
+              (<b>Link akan hangus dalam 5 jam</b>)`
     };
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
