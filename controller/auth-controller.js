@@ -93,7 +93,6 @@ export const sendResetLink = async (req, res) => {
         console.log(error);
         return res.status(500).send(error);
       }
-      console.log('Email sent: ' + info.response);
       return res.status(200).send(info.response);
     });
   } catch (err) {
