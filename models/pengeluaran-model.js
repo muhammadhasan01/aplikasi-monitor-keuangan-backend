@@ -1,105 +1,73 @@
 import mongoose from 'mongoose';
-import { RKASchema, RKAModel } from "./RKA-model.js";
+import {RKASchema, RKAModel} from "./RKA-model.js";
+
 let Schema = mongoose.Schema;
 
 const pengeluaranSchema = Schema({
-    jumlah: {
-        type: Number,
-        default: 0,
-    },
-    bulan: {
-        type: String,
-        trim: true
-    },
-    RKA: {
-        type: RKASchema
-    }
+  jumlah: {
+    type: Number,
+    default: 0,
+  },
+  bulan: {
+    type: String,
+    trim: true
+  },
+  RKA: {
+    type: RKASchema
+  }
 }, {
-    timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" },
+  timestamps: {createdAt: "createdAt", updatedAt: "updatedAt"},
 });
 
 const PengeluaranModel = mongoose.model('pengeluaran', pengeluaranSchema);
 
 export const getAllPengeluaran = async () => {
-    try {
-        return await PengeluaranModel.find().sort({ _id: -1 });
-    } catch (err) {
-        throw err;
-    }
+  return await PengeluaranModel.find().sort({_id: -1});
 }
 
 export const getAllPengeluaranUnit = async (unit) => {
-    try {
-        const pengeluaran = PengeluaranModel.find({ unit: unit }).sort({ _id: -1 });
-        return pengeluaran;
-    } catch (err) {
-        throw err;
-    }
+  const pengeluaran = PengeluaranModel.find({unit: unit}).sort({_id: -1});
+  return pengeluaran;
 }
 
 export const getPengeluaran = async (id) => {
-    try {
-        return await PengeluaranModel.findById(id);
-    } catch (err) {
-        throw err;
-    }
+  return await PengeluaranModel.findById(id);
 }
 
 export const removePengeluaran = async (id) => {
-    try {
-        return await PengeluaranModel.findByIdAndRemove(id);
-    } catch (err) {
-        throw err;
-    }
+  return await PengeluaranModel.findByIdAndRemove(id);
 }
 
 export const removeAllPengeluaran = async () => {
-    try {
-        return await PengeluaranModel.remove();
-    } catch (err) {
-        throw err;
-    }
+  return await PengeluaranModel.remove();
 }
 
 export const updatePengeluaran = async (id, amount) => {
-    try {
-        return await PengeluaranModel.findByIdAndUpdate(id, { $inc: { jumlah: amount } });
-    } catch (err) {
-        throw err;
-    }
+  return await PengeluaranModel.findByIdAndUpdate(id, {$inc: {jumlah: amount}});
 }
 
 export const inputPengeluaran = async (id, amount, bulan) => {
-    try {
-        const RKA = await RKAModel.findById(id);
-        const { penggunaan } = RKA;
-        penggunaan[bulan] += amount;
-        // Update RKA
-        await RKAModel.findByIdAndUpdate(id, {$set: { penggunaan: penggunaan } }, { multi: true });
-        const updatedRKA = await RKAModel.findById(id);
-        // Update Riwayat Input Pengeluaran
-        const pengeluaran = new PengeluaranModel({ jumlah: amount, RKA: updatedRKA, bulan });
-        await pengeluaran.save();
-        return pengeluaran;
-    } catch (err) {
-        throw err;
-    }
+  const RKA = await RKAModel.findById(id);
+  const {penggunaan} = RKA;
+  penggunaan[bulan] += amount;
+  // Update RKA
+  await RKAModel.findByIdAndUpdate(id, {$set: {penggunaan: penggunaan}}, {multi: true});
+  const updatedRKA = await RKAModel.findById(id);
+  // Update Riwayat Input Pengeluaran
+  const pengeluaran = new PengeluaranModel({jumlah: amount, RKA: updatedRKA, bulan});
+  await pengeluaran.save();
+  return pengeluaran;
 }
 
 
 export const undoPengeluaran = async (id) => {
-    try {
-        const pengeluaran = await PengeluaranModel.findById(id);
-        const { RKA: { _id }, bulan, jumlah } = pengeluaran;
-        const RKA = await RKAModel.findById(_id);
-        const { penggunaan } = RKA;
-        penggunaan[bulan] -= jumlah;
-        // Update RKA
-        await RKAModel.findByIdAndUpdate(_id, { $set: { penggunaan: penggunaan } }, { multi: true });
-        // Remove data pengeluaran
-        const ret = await removePengeluaran(id);
-        return ret;
-    } catch (err) {
-        throw err;
-    }
+  const pengeluaran = await PengeluaranModel.findById(id);
+  const {RKA: {_id}, bulan, jumlah} = pengeluaran;
+  const RKA = await RKAModel.findById(_id);
+  const {penggunaan} = RKA;
+  penggunaan[bulan] -= jumlah;
+  // Update RKA
+  await RKAModel.findByIdAndUpdate(_id, {$set: {penggunaan: penggunaan}}, {multi: true});
+  // Remove data pengeluaran
+  return await removePengeluaran(id);
 }
