@@ -28,14 +28,18 @@ app.use('/ado', adoRouter);
 app.use('/pengeluaran', pengeluaranRouter);
 
 try {
-    mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true, useFindAndModify: false })
-    const connection = mongoose.connection;
-    connection.once('open', () => {
-        console.log("MongoDB database connection established successfully");
-    })
-    app.listen(PORT, () => {
-        console.log(`[+] Server is running on PORT: ${PORT}`);
-    });
+  mongoose.connect(CONNECTION_URL, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false
+  })
+  mongoose.connection.once('open', () => {
+    console.log("MongoDB database connection established successfully");
+  })
+  app.listen(PORT, () => {
+    console.log(`[+] Server is running on PORT: ${PORT}`);
+  });
 } catch (err) {
-    console.log("Error: " + err.message);
+  console.log("Error: " + err.message);
 }
